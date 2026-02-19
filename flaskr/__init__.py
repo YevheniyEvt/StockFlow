@@ -1,9 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import mapped_column, Mapped, DeclarativeBase
 
-from flaskr.models import Base
+
+class Base(DeclarativeBase):
+    id: Mapped[int] = mapped_column(primary_key=True)
 
 db = SQLAlchemy(model_class=Base)
+
+from flaskr.models import *
 
 def init_app():
     """Initialize the core application."""
@@ -14,6 +19,9 @@ def init_app():
     # configure the SQLite database, relative to the app instance folder
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
     db.init_app(app)
+
+
+    db.create_all()
 
     with app.app_context():
         # Import parts of our application

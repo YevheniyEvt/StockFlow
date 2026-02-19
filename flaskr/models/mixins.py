@@ -21,5 +21,5 @@ class ItemsMixin:
     def __table_args__(cls):
         return (
             CheckConstraint("quantity >= 0", name=f"ck_{cls.__tablename__}_quantity_positive"),
-            CheckConstraint("price_per_unit >= 0", ame=f"ck_{cls.__tablename__}_price_per_unit_positive"),
+            CheckConstraint("price_per_unit >= 0", name=f"ck_{cls.__tablename__}_price_per_unit_positive"),
         )
