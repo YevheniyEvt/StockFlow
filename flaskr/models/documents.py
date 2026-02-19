@@ -30,6 +30,7 @@ class Document(CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'document'
 
     counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
+    items: Mapped[List["DocumentItem"]] = relationship(back_populates="document", cascade="all, delete-orphan")
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
 
     __mapper_args__ = {
@@ -47,14 +48,6 @@ class GoodsReceivedNote(Document):
     __tablename__ = 'goods_received_note'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
-    products: Mapped[List["Product"]] = relationship(
-        back_populates="goods_received_notes",
-        secondary="goods_received_note_product_association"
-    )
-    product_associations: Mapped[List["GoodsReceivedNoteProductAssociation"]] = relationship(
-        back_populates="goods_received_note"
-    )
-
     status: Mapped[GoodsReceivedNoteStatus] = mapped_column(Enum(GoodsReceivedNoteStatus))
     held_date: Mapped[datetime | None]
 
@@ -73,9 +66,6 @@ class Order(Document):
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
     invoices: Mapped[List["Invoice"]] = relationship(back_populates="order")
-    products: Mapped[List["Product"]] = relationship(back_populates="orders", secondary="order_product_association")
-    product_associations: Mapped[List["OrderProductAssociation"]] = relationship(back_populates="order")
-
     status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus, native_enum=False))
 
     __mapper_args__ = {
@@ -100,14 +90,6 @@ class Invoice(Document):
     goods_delivery_notes: Mapped[List["GoodsDeliveryNote"]] = relationship(
         back_populates="invoice"
     )
-    products: Mapped[List["Product"]] = relationship(
-        back_populates="invoices",
-        secondary="invoice_product_association"
-    )
-    product_associations: Mapped[List["InvoiceProductAssociation"]] = relationship(
-        back_populates="invoice"
-    )
-
     status: Mapped[InvoiceStatus] = mapped_column(Enum(InvoiceStatus, native_enum=False))
     payment_final_date: Mapped[datetime | None]
 
@@ -130,14 +112,6 @@ class GoodsDeliveryNote(Document):
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
     invoice_id: Mapped[int] = mapped_column(ForeignKey('invoice.id'))
     invoice: Mapped["Invoice"] = relationship(back_populates="goods_delivery_notes")
-    products: Mapped[List["Product"]] = relationship(
-        back_populates="goods_delivery_notes",
-        secondary="goods_delivery_note_product_association"
-    )
-    product_associations: Mapped[List["GoodsDeliveryNoteProductAssociation"]] = relationship(
-        back_populates="goods_delivery_note"
-    )
-
     tax_invoices: Mapped[List["TaxInvoice"]] = relationship(back_populates="goods_delivery_note")
     status: Mapped[GoodsDeliveryNoteStatus] = mapped_column(Enum(GoodsDeliveryNoteStatus, native_enum=False))
 
@@ -156,14 +130,6 @@ class TaxInvoice(Document):
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
     goods_delivery_note_id: Mapped[int] = mapped_column(ForeignKey('goods_delivery_note.id'))
     goods_delivery_note: Mapped["GoodsDeliveryNote"] = relationship(back_populates="tax_invoices")
-    products: Mapped[List["Product"]] = relationship(
-        back_populates="tax_invoices",
-        secondary="tax_invoice_product_association"
-    )
-    product_associations: Mapped[List["TaxInvoiceProductAssociation"]] = relationship(
-        back_populates="tax_invoice"
-    )
-
     status: Mapped[TaxInvoiceStatus] = mapped_column(Enum(TaxInvoiceStatus, native_enum=False))
 
     __mapper_args__ = {

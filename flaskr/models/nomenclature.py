@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, Enum, ForeignKey, String, Numeric, CheckConstraint
+from sqlalchemy import Integer, ForeignKey, String, Numeric, CheckConstraint
 
 __all__ = (
     'Product',
@@ -25,49 +25,10 @@ class BaseProductService:
 class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'product'
 
+    document_products: Mapped[List["DocumentItem"]] = relationship(back_populates="product")
     purchase_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     selling_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     minimum_stock: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-
-    goods_received_notes: Mapped[List["GoodsReceivedNote"]] = relationship(
-        back_populates="products",
-        secondary="goods_received_note_product_association"
-    )
-    goods_received_note_associations: Mapped[List["GoodsReceivedNoteProductAssociation"]] = relationship(
-        back_populates="product"
-    )
-
-    orders: Mapped[List["Order"]] = relationship(
-        back_populates="products",
-        secondary="order_product_association"
-    )
-    order_associations: Mapped[List["OrderProductAssociation"]] = relationship(
-        back_populates="product"
-    )
-
-    invoices: Mapped[List["Invoice"]] = relationship(
-        back_populates="products",
-        secondary="invoice_product_association"
-    )
-    invoice_associations: Mapped[List["InvoiceProductAssociation"]] = relationship(
-        back_populates="product"
-    )
-
-    goods_delivery_notes: Mapped[List["GoodsDeliveryNote"]] = relationship(
-        back_populates="products",
-        secondary="goods_delivery_note_product_association"
-    )
-    goods_delivery_note_associations: Mapped[List["GoodsDeliveryNoteProductAssociation"]] = relationship(
-        back_populates="product"
-    )
-
-    tax_invoices: Mapped[List["TaxInvoice"]] = relationship(
-        back_populates="products",
-        secondary="tax_invoice_product_association"
-    )
-    tax_invoice_associations: Mapped[List["TaxInvoiceProductAssociation"]] = relationship(
-        back_populates="product"
-    )
 
     __table_args__ = (
         CheckConstraint("multiplicity >= 0", name="ck_product_multiplicity_positive"),
@@ -78,8 +39,9 @@ class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     )
 
 class Service(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
-    __tablename__ = 'services'
+    __tablename__ = 'service'
 
+    document_services: Mapped[List["DocumentItem"]] = relationship(back_populates="service")
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
     __table_args__ = (
