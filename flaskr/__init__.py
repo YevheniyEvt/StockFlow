@@ -15,15 +15,10 @@ def init_app():
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object('config.Config')
 
-    # Initialize Plugins
-    # configure the SQLite database, relative to the app instance folder
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
     db.init_app(app)
 
-
-    db.create_all()
-
     with app.app_context():
+        db.create_all()
         # Import parts of our application
         from .accounting import routes
         from .directory import routes
@@ -32,10 +27,10 @@ def init_app():
         from .reports import routes
 
         # Register Blueprints
-        app.register_blueprint(accounting.accounting_bp)
-        app.register_blueprint(directory.directory_bp)
-        app.register_blueprint(documents.documents_bp)
-        app.register_blueprint(nomenclature.nomenclature_bp)
-        app.register_blueprint(reports.reports_bp)
+        app.register_blueprint(accounting.routes.accounting_bp)
+        app.register_blueprint(directory.routes.directory_bp)
+        app.register_blueprint(documents.routes.documents_bp)
+        app.register_blueprint(nomenclature.routes.nomenclature_bp)
+        app.register_blueprint(reports.routes.reports_bp)
 
         return app

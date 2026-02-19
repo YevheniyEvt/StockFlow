@@ -14,7 +14,7 @@ from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
 
 
 class BaseProductService:
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organizations.id'))
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int| None] = mapped_column(ForeignKey('counterparty.id'), nullable=True)
     units_of_measurement_id: Mapped[int] = mapped_column(ForeignKey('units_of_measurement.id'))
     article: Mapped[int] = mapped_column(Integer)
