@@ -2,33 +2,30 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
 __all__ = (
-    'WarehouseCreateSchema',
-    'WarehouseUpdateSchema',
-    'WarehouseResponseSchema',
-    'WarehouseListSchema',
+    'OperationTypeCreateSchema',
+    'OperationTypeUpdateSchema',
+    'OperationTypeResponseSchema',
+    'OperationTypeListSchema',
 )
 
 
-class WarehouseCreateSchema(BaseModel):
+class OperationTypeCreateSchema(BaseModel):
     name: str
-    address: str | None = None
     organization_id: int
 
 
-class WarehouseUpdateSchema(BaseModel):
+class OperationTypeUpdateSchema(BaseModel):
     name: str | None = None
-    address: str | None = None
     organization_id: int | None = None
 
 
-class WarehouseListSchema(BaseModel):
+class OperationTypeListSchema(BaseModel):
     organization_id: int
 
 
-class WarehouseResponseSchema(BaseModel):
+class OperationTypeResponseSchema(BaseModel):
     id: int
     name: str
-    address: str
     created_at: datetime
     updated_at: datetime
 

@@ -46,3 +46,8 @@ class BaseService(Generic[ModelType]):
         if not instance:
             abort(404)
         return instance
+
+    @classmethod
+    def all(cls, data) -> list[ModelType]:
+        organization_id = data.organization_id
+        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()

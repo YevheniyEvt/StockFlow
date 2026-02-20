@@ -5,6 +5,7 @@ __all__ = (
     'CounterpartyCreateSchema',
     'CounterpartyUpdateSchema',
     'CounterpartyResponseSchema',
+    'CounterpartyListSchema',
 )
 
 
@@ -15,7 +16,8 @@ class CounterpartyCreateSchema(BaseModel):
 
 
 class CounterpartyUpdateSchema(BaseModel):
-    name: str | None
+    name: str | None = None
+    address: str | None = None
     organization_id: int | None = None
 
 
@@ -26,6 +28,7 @@ class CounterpartyListSchema(BaseModel):
 class CounterpartyResponseSchema(BaseModel):
     id: int
     name: str
+    address: str
     created_at: datetime
     updated_at: datetime
 

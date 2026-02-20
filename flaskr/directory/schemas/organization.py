@@ -14,7 +14,7 @@ class OrganizationCreateSchema(BaseModel):
 
 
 class OrganizationUpdateSchema(BaseModel):
-    name: str | None
+    name: str | None = None
     address: str | None = None
 
 
