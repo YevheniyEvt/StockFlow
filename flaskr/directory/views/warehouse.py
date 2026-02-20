@@ -4,9 +4,9 @@ from flask.views import MethodView
 from flaskr.directory.schemas import (
     WarehouseCreateSchema,
     WarehouseUpdateSchema,
-    WarehouseResponseSchema
+    WarehouseResponseSchema,
+    WarehouseListSchema,
 )
-from flaskr.directory.schemas.warehouse import WarehouseListSchema
 from flaskr.directory.services import WarehouseService
 
 __all__ = (
@@ -29,30 +29,30 @@ class WarehouseListAPI(MethodView):
 class WarehouseDetailAPI(MethodView):
 
     def get(self, id):
-        organization = WarehouseService.get_or_404(id)
-        return WarehouseResponseSchema.model_validate(organization).model_dump()
+        warehouse = WarehouseService.get_or_404(id)
+        return WarehouseResponseSchema.model_validate(warehouse).model_dump()
 
 
 class WarehouseCreateAPI(MethodView):
 
     def post(self):
         data = WarehouseCreateSchema.model_validate(request.json)
-        organization = WarehouseService.create(data)
-        return WarehouseResponseSchema.model_validate(organization).model_dump(), 201
+        warehouse = WarehouseService.create(data)
+        return WarehouseResponseSchema.model_validate(warehouse).model_dump(), 201
 
 
 class WarehouseUpdateAPI(MethodView):
 
     def patch(self, id):
-        organization = WarehouseService.get_or_404(id)
+        warehouse = WarehouseService.get_or_404(id)
         data = WarehouseUpdateSchema.model_validate(request.json)
-        organization_update = WarehouseService.update(organization, data)
-        return WarehouseResponseSchema.model_validate(organization_update).model_dump()
+        warehouse_update = WarehouseService.update(warehouse, data)
+        return WarehouseResponseSchema.model_validate(warehouse_update).model_dump()
 
 
 class WarehouseDeleteAPI(MethodView):
 
     def delete(self, id):
-        organization = WarehouseService.get_or_404(id)
-        WarehouseService.delete(organization)
+        warehouse = WarehouseService.get_or_404(id)
+        WarehouseService.delete(warehouse)
         return '', 204

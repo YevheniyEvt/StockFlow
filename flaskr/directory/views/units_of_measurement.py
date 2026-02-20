@@ -4,9 +4,9 @@ from flask.views import MethodView
 from flaskr.directory.schemas import (
     UnitsOfMeasurementCreateSchema,
     UnitsOfMeasurementUpdateSchema,
-    UnitsOfMeasurementResponseSchema
+    UnitsOfMeasurementResponseSchema,
+    UnitsOfMeasurementListSchema,
 )
-from flaskr.directory.schemas.units_of_measurement import UnitsOfMeasurementListSchema
 from flaskr.directory.services import UnitsOfMeasurementService
 
 __all__ = (
@@ -29,30 +29,30 @@ class UnitsOfMeasurementListAPI(MethodView):
 class UnitsOfMeasurementDetailAPI(MethodView):
 
     def get(self, id):
-        organization = UnitsOfMeasurementService.get_or_404(id)
-        return UnitsOfMeasurementResponseSchema.model_validate(organization).model_dump()
+        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
+        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement).model_dump()
 
 
 class UnitsOfMeasurementCreateAPI(MethodView):
 
     def post(self):
         data = UnitsOfMeasurementCreateSchema.model_validate(request.json)
-        organization = UnitsOfMeasurementService.create(data)
-        return UnitsOfMeasurementResponseSchema.model_validate(organization).model_dump(), 201
+        units_of_measurement = UnitsOfMeasurementService.create(data)
+        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement).model_dump(), 201
 
 
 class UnitsOfMeasurementUpdateAPI(MethodView):
 
     def patch(self, id):
-        organization = UnitsOfMeasurementService.get_or_404(id)
+        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
         data = UnitsOfMeasurementUpdateSchema.model_validate(request.json)
-        organization_update = UnitsOfMeasurementService.update(organization, data)
-        return UnitsOfMeasurementResponseSchema.model_validate(organization_update).model_dump()
+        units_of_measurement_update = UnitsOfMeasurementService.update(units_of_measurement, data)
+        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement_update).model_dump()
 
 
 class UnitsOfMeasurementDeleteAPI(MethodView):
 
     def delete(self, id):
-        organization = UnitsOfMeasurementService.get_or_404(id)
-        UnitsOfMeasurementService.delete(organization)
+        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
+        UnitsOfMeasurementService.delete(units_of_measurement)
         return '', 204

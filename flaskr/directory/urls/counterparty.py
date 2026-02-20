@@ -1,4 +1,4 @@
-from . import directory_bp
+from flaskr.directory import directory_bp
 
 from flaskr.directory.views import (
     CounterpartyDetailAPI,

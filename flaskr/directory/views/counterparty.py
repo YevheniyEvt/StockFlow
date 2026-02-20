@@ -4,9 +4,9 @@ from flask.views import MethodView
 from flaskr.directory.schemas import (
     CounterpartyCreateSchema,
     CounterpartyUpdateSchema,
-    CounterpartyResponseSchema
+    CounterpartyResponseSchema,
+    CounterpartyListSchema,
 )
-from flaskr.directory.schemas.counterparty import CounterpartyListSchema
 from flaskr.directory.services import CounterpartyService
 
 __all__ = (
@@ -29,30 +29,30 @@ class CounterpartyListAPI(MethodView):
 class CounterpartyDetailAPI(MethodView):
 
     def get(self, id):
-        organization = CounterpartyService.get_or_404(id)
-        return CounterpartyResponseSchema.model_validate(organization).model_dump()
+        counterparty = CounterpartyService.get_or_404(id)
+        return CounterpartyResponseSchema.model_validate(counterparty).model_dump()
 
 
 class CounterpartyCreateAPI(MethodView):
 
     def post(self):
         data = CounterpartyCreateSchema.model_validate(request.json)
-        organization = CounterpartyService.create(data)
-        return CounterpartyResponseSchema.model_validate(organization).model_dump(), 201
+        counterparty = CounterpartyService.create(data)
+        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(), 201
 
 
 class CounterpartyUpdateAPI(MethodView):
 
     def patch(self, id):
-        organization = CounterpartyService.get_or_404(id)
+        counterparty = CounterpartyService.get_or_404(id)
         data = CounterpartyUpdateSchema.model_validate(request.json)
-        organization_update = CounterpartyService.update(organization, data)
-        return CounterpartyResponseSchema.model_validate(organization_update).model_dump()
+        counterparty_update = CounterpartyService.update(counterparty, data)
+        return CounterpartyResponseSchema.model_validate(counterparty_update).model_dump()
 
 
 class CounterpartyDeleteAPI(MethodView):
 
     def delete(self, id):
-        organization = CounterpartyService.get_or_404(id)
-        CounterpartyService.delete(organization)
+        counterparty = CounterpartyService.get_or_404(id)
+        CounterpartyService.delete(counterparty)
         return '', 204

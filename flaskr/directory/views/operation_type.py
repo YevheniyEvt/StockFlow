@@ -4,9 +4,9 @@ from flask.views import MethodView
 from flaskr.directory.schemas import (
     OperationTypeCreateSchema,
     OperationTypeUpdateSchema,
-    OperationTypeResponseSchema
+    OperationTypeResponseSchema,
+    OperationTypeListSchema,
 )
-from flaskr.directory.schemas.operation_type import OperationTypeListSchema
 from flaskr.directory.services import OperationTypeService
 
 __all__ = (
@@ -29,30 +29,30 @@ class OperationTypeListAPI(MethodView):
 class OperationTypeDetailAPI(MethodView):
 
     def get(self, id):
-        organization = OperationTypeService.get_or_404(id)
-        return OperationTypeResponseSchema.model_validate(organization).model_dump()
+        operation_type = OperationTypeService.get_or_404(id)
+        return OperationTypeResponseSchema.model_validate(operation_type).model_dump()
 
 
 class OperationTypeCreateAPI(MethodView):
 
     def post(self):
         data = OperationTypeCreateSchema.model_validate(request.json)
-        organization = OperationTypeService.create(data)
-        return OperationTypeResponseSchema.model_validate(organization).model_dump(), 201
+        operation_type = OperationTypeService.create(data)
+        return OperationTypeResponseSchema.model_validate(operation_type).model_dump(), 201
 
 
 class OperationTypeUpdateAPI(MethodView):
 
     def patch(self, id):
-        organization = OperationTypeService.get_or_404(id)
+        operation_type = OperationTypeService.get_or_404(id)
         data = OperationTypeUpdateSchema.model_validate(request.json)
-        organization_update = OperationTypeService.update(organization, data)
-        return OperationTypeResponseSchema.model_validate(organization_update).model_dump()
+        operation_type_update = OperationTypeService.update(operation_type, data)
+        return OperationTypeResponseSchema.model_validate(operation_type_update).model_dump()
 
 
 class OperationTypeDeleteAPI(MethodView):
 
     def delete(self, id):
-        organization = OperationTypeService.get_or_404(id)
-        OperationTypeService.delete(organization)
+        operation_type = OperationTypeService.get_or_404(id)
+        OperationTypeService.delete(operation_type)
         return '', 204
