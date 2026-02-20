@@ -6,7 +6,7 @@ from flaskr.nomenclature.models import (
 
 __all__ = (
     'ProductService',
-    'ServicesService',
+    'ServiceService',
 )
 
 
@@ -14,5 +14,5 @@ class ProductService(BaseService[Product]):
     model = Product
 
 
-class ServicesService(BaseService[Service]):
+class ServiceService(BaseService[Service]):
     model = Service
