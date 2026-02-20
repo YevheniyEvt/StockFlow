@@ -28,7 +28,7 @@ class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     document_products: Mapped[List["DocumentItem"]] = relationship(back_populates="product")
     purchase_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     selling_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    minimum_stock: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    minimum_stock: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
 
     __table_args__ = (
         CheckConstraint("multiplicity >= 0", name="ck_product_multiplicity_positive"),
