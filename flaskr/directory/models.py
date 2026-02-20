@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, ForeignKey
 
+from flaskr import db
+from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+
 __all__ = (
     'Organization',
     'Counterparty',
@@ -9,15 +12,12 @@ __all__ = (
     'UnitsOfMeasurement',
 )
 
-from flaskr import db
-from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
-
 
 class Organization(CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'organization'
 
     name: Mapped[str] = mapped_column(String(50))
-    address: Mapped[str | None]  = mapped_column(String(50))
+    address: Mapped[str | None] = mapped_column(String(50))
 
 
 class BaseDirectory:
@@ -43,6 +43,3 @@ class OperationType(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
 
 class UnitsOfMeasurement(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'units_of_measurement'
-
-
-

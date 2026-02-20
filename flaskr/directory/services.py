@@ -4,14 +4,22 @@ from sqlalchemy import select
 
 from flaskr import db
 from flaskr.core.services import BaseService
-from flaskr.directory.models import Counterparty, OperationType, Organization, Warehouse
+from flaskr.directory.models import (
+    Counterparty,
+    OperationType,
+    Organization,
+    Warehouse,
+    UnitsOfMeasurement,
+)
 
 __all__ = (
     'OrganizationService',
     'CounterpartyService',
-    "OperationTypeService",
-    "WarehouseService",
+    'OperationTypeService',
+    'WarehouseService',
+    'UnitsOfMeasurementService'
 )
+
 
 class OrganizationService(BaseService[Organization]):
     model = Organization
@@ -31,3 +39,7 @@ class OperationTypeService(BaseService[OperationType]):
 
 class WarehouseService(BaseService[Warehouse]):
     model = Warehouse
+
+
+class UnitsOfMeasurementService(BaseService[UnitsOfMeasurement]):
+    model = UnitsOfMeasurement
