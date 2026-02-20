@@ -6,13 +6,23 @@ from sqlalchemy.orm import Mapped, mapped_column, declared_attr
 
 
 class CreatedUpdatedDateTimeMixin:
-    """Mixin to auto add created_at and updated_at columns"""
+    """
+    Mixin providing created_at and updated_at datetime columns.
+    
+    Automatically tracks row creation and last modification times.
+    """
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
 
 class ItemsMixin:
+    """
+    Mixin for document items containing quantity, price per unit, and total amount.
+    
+    Includes basic check constraints to ensure quantity and price are non-negative.
+    """
+
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     price_per_unit: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))

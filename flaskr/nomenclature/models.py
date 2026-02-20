@@ -14,6 +14,12 @@ from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
 
 
 class BaseProductService:
+    """
+    Base class for product and service models.
+    
+    Contains shared attributes like organization_id, counterparty_id, 
+    units_of_measurement_id, article, name, and multiplicity.
+    """
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int| None] = mapped_column(ForeignKey('counterparty.id'), nullable=True)
     units_of_measurement_id: Mapped[int] = mapped_column(ForeignKey('units_of_measurement.id'))

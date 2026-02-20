@@ -11,6 +11,13 @@ ModelType = TypeVar("ModelType", bound=DeclarativeBase)
 
 
 class BaseService(Generic[ModelType]):
+    """
+    Base class for CRUD operations on SQLAlchemy models.
+    
+    Subclasses must define the `model` attribute.
+    Provides methods for common operations: create, update, delete, get by ID, and list all.
+    """
+
     model: Type[ModelType] = None
 
     def __init_subclass__(cls, **kwargs):
