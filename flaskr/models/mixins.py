@@ -9,7 +9,7 @@ class CreatedUpdatedDateTimeMixin:
     """Mixin to auto add created_at and updated_at columns"""
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(onupdate=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
 
 class ItemsMixin:
