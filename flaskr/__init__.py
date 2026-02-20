@@ -30,7 +30,7 @@ def init_app():
 
         # Register Blueprints
         app.register_blueprint(accounting.routes.accounting_bp)
-        app.register_blueprint(directory.urls.directory_bp)
+        app.register_blueprint(directory.directory_bp)
         app.register_blueprint(documents.routes.documents_bp)
         app.register_blueprint(nomenclature.routes.nomenclature_bp)
         app.register_blueprint(reports.routes.reports_bp)

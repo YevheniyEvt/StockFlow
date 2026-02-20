@@ -28,7 +28,7 @@ class BaseDirectory:
 class Counterparty(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'counterparty'
 
-    address: Mapped[str] = mapped_column(String(50))
+    address: Mapped[str | None] = mapped_column(String(50))
 
 
 class Warehouse(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
