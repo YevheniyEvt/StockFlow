@@ -1,4 +1,6 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import List
+
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, ForeignKey
 
 from flaskr import db
@@ -39,6 +41,11 @@ class Warehouse(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
 
 class OperationType(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'operation_type'
+
+    # orders: Mapped[List["Order"]] = relationship(
+    #     back_populates="operation_type",
+    #     foreign_keys="Order.operation_type_id"
+    # )
 
 
 class UnitsOfMeasurement(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):

@@ -13,8 +13,8 @@ __all__ = (
 from flaskr import db
 
 class ProductMovementStatus(enum.Enum):
-    selling = "selling"
-    purchase = "purchase"
+    SELLING = "selling"
+    PURCHASE = "purchase"
 
 class ProductMovement(db.Model):
     __tablename__ = 'product_movement'
@@ -28,8 +28,8 @@ class ProductMovement(db.Model):
 
 
 class FinancialOperationsStatus(enum.Enum):
-    debiting = "debiting"
-    crediting = "crediting"
+    DEBITING = "debiting"
+    CREDITING = "crediting"
 
 class FinancialOperations(db.Model):
     __tablename__ = 'financial_operations'

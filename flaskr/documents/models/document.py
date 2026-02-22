@@ -1,12 +1,19 @@
-import enum
 from datetime import datetime
 from typing import List
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Enum, ForeignKey
 
-from flaskr import db
+from flaskr import db, OperationType
 from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+from flaskr.documents.models.document_enum import (
+    DocumentType,
+    GoodsReceivedNoteStatus,
+    OrderStatus,
+    InvoiceStatus,
+    GoodsDeliveryNoteStatus,
+    TaxInvoiceStatus,
+)
 
 __all__ = (
     'Document',
@@ -18,14 +25,6 @@ __all__ = (
 )
 
 
-class DocumentType(enum.Enum):
-    goods_received_note = "goods_received_note"
-    order = "order"
-    invoice = "invoice"
-    goods_delivery_note = "goods_delivery_note"
-    tax_invoice = "tax_invoice"
-
-
 class Document(CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'document'
 
@@ -35,31 +34,23 @@ class Document(CreatedUpdatedDateTimeMixin, db.Model):
 
     __mapper_args__ = {
         "polymorphic_on": document_type,
-        "polymorphic_identity": "document",
     }
 
-
-class GoodsReceivedNoteStatus(enum.Enum):
-    draft = "draft"
-    held = "held"
-    canceled = "canceled"
 
 class GoodsReceivedNote(Document):
     __tablename__ = 'goods_received_note'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
-    status: Mapped[GoodsReceivedNoteStatus] = mapped_column(Enum(GoodsReceivedNoteStatus))
+    status: Mapped[GoodsReceivedNoteStatus] = mapped_column(
+        Enum(GoodsReceivedNoteStatus, native_enum=False),
+        default=GoodsReceivedNoteStatus.DRAFT
+    )
     held_date: Mapped[datetime | None]
 
     __mapper_args__ = {
-        "polymorphic_identity": DocumentType.goods_received_note,
+        "polymorphic_identity": DocumentType.GOODS_RECEIVED_NOTE,
     }
 
-
-class OrderStatus(enum.Enum):
-    draft = "draft"
-    confirmed_by_client = "confirmed_by_client"
-    canceled = "canceled"
 
 class Order(Document):
     __tablename__ = 'order'
@@ -69,20 +60,20 @@ class Order(Document):
         back_populates="order",
         foreign_keys="Invoice.order_id"
     )
-    status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus, native_enum=False))
+    # operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
+    # operation_type: Mapped["OperationType"] = relationship(
+    #     back_populates="orders",
+    #     foreign_keys=[operation_type_id]
+    # )
+    status: Mapped[OrderStatus] = mapped_column(
+        Enum(OrderStatus, native_enum=False),
+        default=OrderStatus.DRAFT
+    )
 
     __mapper_args__ = {
-        "polymorphic_identity": DocumentType.order,
+        "polymorphic_identity": DocumentType.ORDER,
     }
 
-
-class InvoiceStatus(enum.Enum):
-    draft = "draft"
-    invoiced = "invoiced"
-    partially_paid = "partially_paid"
-    paid = "paid"
-    overdue = "overdue"
-    canceled = "canceled"
 
 class Invoice(Document):
     __tablename__ = 'invoice'
@@ -96,21 +87,16 @@ class Invoice(Document):
     goods_delivery_notes: Mapped[List["GoodsDeliveryNote"]] = relationship(
         back_populates="invoice", foreign_keys="GoodsDeliveryNote.invoice_id"
     )
-    status: Mapped[InvoiceStatus] = mapped_column(Enum(InvoiceStatus, native_enum=False))
+    status: Mapped[InvoiceStatus] = mapped_column(
+        Enum(InvoiceStatus, native_enum=False),
+        default=InvoiceStatus.DRAFT
+    )
     payment_final_date: Mapped[datetime | None]
 
     __mapper_args__ = {
-        "polymorphic_identity": DocumentType.invoice,
+        "polymorphic_identity": DocumentType.INVOICE,
     }
 
-
-class GoodsDeliveryNoteStatus(enum.Enum):
-    draft = "draft"
-    sent = "sent"
-    signed = "signed"
-    held = "held"
-    rejected = "rejected"
-    refund = "refund"
 
 class GoodsDeliveryNote(Document):
     __tablename__ = 'goods_delivery_note'
@@ -125,16 +111,15 @@ class GoodsDeliveryNote(Document):
         back_populates="goods_delivery_note",
         foreign_keys="TaxInvoice.goods_delivery_note_id"
     )
-    status: Mapped[GoodsDeliveryNoteStatus] = mapped_column(Enum(GoodsDeliveryNoteStatus, native_enum=False))
+    status: Mapped[GoodsDeliveryNoteStatus] = mapped_column(
+        Enum(GoodsDeliveryNoteStatus, native_enum=False),
+        default=GoodsDeliveryNoteStatus.DRAFT
+    )
 
     __mapper_args__ = {
-        "polymorphic_identity": DocumentType.goods_delivery_note,
+        "polymorphic_identity": DocumentType.GOODS_DELIVERY_NOTE,
     }
 
-
-class TaxInvoiceStatus(enum.Enum):
-    registered = "registered"
-    rejected = "rejected"
 
 class TaxInvoice(Document):
     __tablename__ = 'tax_invoice'
@@ -145,9 +130,12 @@ class TaxInvoice(Document):
         back_populates="tax_invoices",
         foreign_keys=[goods_delivery_note_id],
     )
-    status: Mapped[TaxInvoiceStatus] = mapped_column(Enum(TaxInvoiceStatus, native_enum=False))
+    status: Mapped[TaxInvoiceStatus] = mapped_column(
+        Enum(TaxInvoiceStatus, native_enum=False),
+        default=TaxInvoiceStatus.DRAFT
+    )
 
     __mapper_args__ = {
-        "polymorphic_identity": DocumentType.tax_invoice,
+        "polymorphic_identity": DocumentType.TAX_INVOICE,
     }
 

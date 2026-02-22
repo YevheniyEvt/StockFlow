@@ -1,6 +1,5 @@
 from flask import Blueprint
 
-# Blueprint Configuration
 documents_bp = Blueprint(
-    'documents_bp', __name__,
+    'documents_bp', __name__, url_prefix='/documents'
 )

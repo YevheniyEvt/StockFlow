@@ -2,9 +2,11 @@ from flask import Flask
 from pydantic import ValidationError
 
 from flaskr.database import db
+
 from flaskr.models import *
 from flaskr.directory.models import *
 from flaskr.nomenclature.models import *
+from flaskr.documents.models import *
 
 
 def init_app():
@@ -25,14 +27,14 @@ def init_app():
         # Import parts of our application
         from .accounting import routes
         from .directory import urls
-        from .documents import routes
+        from .documents import urls
         from .nomenclature import urls
         from .reports import routes
 
         # Register Blueprints
         app.register_blueprint(accounting.routes.accounting_bp)
         app.register_blueprint(directory.directory_bp)
-        app.register_blueprint(documents.routes.documents_bp)
+        app.register_blueprint(documents.documents_bp)
         app.register_blueprint(nomenclature.nomenclature_bp)
         app.register_blueprint(reports.routes.reports_bp)
 
