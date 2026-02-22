@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.nomenclature.schemas import (
     ServiceCreateSchema,
     ServiceUpdateSchema,
@@ -8,6 +5,7 @@ from flaskr.nomenclature.schemas import (
 )
 from flaskr.nomenclature.schemas import ServiceListSchema
 from flaskr.nomenclature.services import ServiceService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'ServiceDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class ServiceListAPI(MethodView):
-
-    def get(self):
-        data = ServiceListSchema.model_validate(request.json)
-        items = ServiceService.all(data)
-        return [ServiceResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class ServiceListAPI(ListAPI):
+    service = ServiceService
+    request_schema = ServiceListSchema
+    response_schema = ServiceResponseSchema
 
 
-class ServiceDetailAPI(MethodView):
-
-    def get(self, id):
-        service = ServiceService.get_or_404(id)
-        return ServiceResponseSchema.model_validate(service).model_dump(mode='json')
+class ServiceDetailAPI(DetailAPI):
+    service = ServiceService
+    response_schema = ServiceResponseSchema
 
 
-class ServiceCreateAPI(MethodView):
-
-    def post(self):
-        data = ServiceCreateSchema.model_validate(request.json)
-        service = ServiceService.create(data)
-        return ServiceResponseSchema.model_validate(service).model_dump(mode='json'), 201
+class ServiceCreateAPI(CreateAPI):
+    service = ServiceService
+    request_schema = ServiceCreateSchema
+    response_schema = ServiceResponseSchema
 
 
-class ServiceUpdateAPI(MethodView):
-
-    def patch(self, id):
-        service = ServiceService.get_or_404(id)
-        data = ServiceUpdateSchema.model_validate(request.json)
-        service_update = ServiceService.update(service, data)
-        return ServiceResponseSchema.model_validate(service_update).model_dump(mode='json')
+class ServiceUpdateAPI(UpdateAPI):
+    service = ServiceService
+    request_schema = ServiceUpdateSchema
+    response_schema = ServiceResponseSchema
 
 
-class ServiceDeleteAPI(MethodView):
-
-    def delete(self, id):
-        service = ServiceService.get_or_404(id)
-        ServiceService.delete(service)
-        return '', 204
+class ServiceDeleteAPI(DeleteAPI):
+    service = ServiceService

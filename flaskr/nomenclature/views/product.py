@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.nomenclature.schemas import (
     ProductCreateSchema,
     ProductUpdateSchema,
@@ -8,6 +5,7 @@ from flaskr.nomenclature.schemas import (
 )
 from flaskr.nomenclature.schemas import ProductListSchema
 from flaskr.nomenclature.services import ProductService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'ProductDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class ProductListAPI(MethodView):
-
-    def get(self):
-        data = ProductListSchema.model_validate(request.json)
-        items = ProductService.all(data)
-        return [ProductResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class ProductListAPI(ListAPI):
+    service = ProductService
+    request_schema = ProductListSchema
+    response_schema = ProductResponseSchema
 
 
-class ProductDetailAPI(MethodView):
-
-    def get(self, id):
-        product = ProductService.get_or_404(id)
-        return ProductResponseSchema.model_validate(product).model_dump(mode='json')
+class ProductDetailAPI(DetailAPI):
+    service = ProductService
+    response_schema = ProductResponseSchema
 
 
-class ProductCreateAPI(MethodView):
-
-    def post(self):
-        data = ProductCreateSchema.model_validate(request.json)
-        product = ProductService.create(data)
-        return ProductResponseSchema.model_validate(product).model_dump(mode='json'), 201
+class ProductCreateAPI(CreateAPI):
+    service = ProductService
+    request_schema = ProductCreateSchema
+    response_schema = ProductResponseSchema
 
 
-class ProductUpdateAPI(MethodView):
-
-    def patch(self, id):
-        product = ProductService.get_or_404(id)
-        data = ProductUpdateSchema.model_validate(request.json)
-        product_update = ProductService.update(product, data)
-        return ProductResponseSchema.model_validate(product_update).model_dump(mode='json')
+class ProductUpdateAPI(UpdateAPI):
+    service = ProductService
+    request_schema = ProductUpdateSchema
+    response_schema = ProductResponseSchema
 
 
-class ProductDeleteAPI(MethodView):
-
-    def delete(self, id):
-        product = ProductService.get_or_404(id)
-        ProductService.delete(product)
-        return '', 204
+class ProductDeleteAPI(DeleteAPI):
+    service = ProductService
