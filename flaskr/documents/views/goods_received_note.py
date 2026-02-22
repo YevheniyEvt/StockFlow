@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.documents.schemas import (
     GoodsReceivedNoteUpdateSchema,
     GoodsReceivedNoteResponseSchema,
@@ -9,6 +6,7 @@ from flaskr.documents.schemas import (
     GoodsReceivedNoteCreateSchema,
 )
 from flaskr.documents.services import GoodsReceivedNoteService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'GoodsReceivedNoteDetailAPI',
@@ -20,50 +18,34 @@ __all__ = (
 )
 
 
-class GoodsReceivedNoteListAPI(MethodView):
-
-    def get(self):
-        data = GoodsReceivedNoteListSchema.model_validate(request.json)
-        items = GoodsReceivedNoteService.all(data)
-        return [GoodsReceivedNoteResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class GoodsReceivedNoteListAPI(ListAPI):
+    service = GoodsReceivedNoteService
+    request_schema = GoodsReceivedNoteListSchema
+    response_schema = GoodsReceivedNoteResponseSchema
 
 
-class GoodsReceivedNoteDetailAPI(MethodView):
-
-    def get(self, id):
-        goods_received_note = GoodsReceivedNoteService.get_or_404(id)
-        return GoodsReceivedNoteResponseSchema.model_validate(goods_received_note).model_dump(mode='json')
+class GoodsReceivedNoteDetailAPI(DetailAPI):
+    service = GoodsReceivedNoteService
+    response_schema = GoodsReceivedNoteResponseSchema
 
 
-class GoodsReceivedNoteCreateAPI(MethodView):
-
-    def post(self):
-        data = GoodsReceivedNoteCreateSchema.model_validate(request.json)
-        goods_received_note = GoodsReceivedNoteService.create(data)
-        return GoodsReceivedNoteResponseSchema.model_validate(goods_received_note).model_dump(mode='json'), 201
+class GoodsReceivedNoteCreateAPI(CreateAPI):
+    service = GoodsReceivedNoteService
+    request_schema = GoodsReceivedNoteCreateSchema
+    response_schema = GoodsReceivedNoteResponseSchema
     
     
-class GoodsReceivedNoteUpdateAPI(MethodView):
-
-    def patch(self, id):
-        goods_received_note = GoodsReceivedNoteService.get_or_404(id)
-        data = GoodsReceivedNoteUpdateSchema.model_validate(request.json)
-        goods_received_note_update = GoodsReceivedNoteService.update(goods_received_note, data)
-        return GoodsReceivedNoteResponseSchema.model_validate(goods_received_note_update).model_dump(mode='json')
+class GoodsReceivedNoteUpdateAPI(UpdateAPI):
+    service = GoodsReceivedNoteService
+    request_schema = GoodsReceivedNoteUpdateSchema
+    response_schema = GoodsReceivedNoteResponseSchema
 
 
-class GoodsReceivedNoteDeleteAPI(MethodView):
-
-    def delete(self, id):
-        goods_received_note = GoodsReceivedNoteService.get_or_404(id)
-        GoodsReceivedNoteService.delete(goods_received_note)
-        return '', 204
+class GoodsReceivedNoteDeleteAPI(DeleteAPI):
+    service = GoodsReceivedNoteService
 
 
-class GoodsReceivedNoteChangeStatusAPI(MethodView):
-
-    def patch(self, id):
-        goods_received_note = GoodsReceivedNoteService.get_or_404(id)
-        data = GoodsReceivedNoteChangeStatusSchema.model_validate(request.json)
-        goods_received_note_update = GoodsReceivedNoteService.change_status(goods_received_note, data)
-        return GoodsReceivedNoteResponseSchema.model_validate(goods_received_note_update).model_dump(mode='json')
+class GoodsReceivedNoteChangeStatusAPI(UpdateAPI):
+    service = GoodsReceivedNoteService
+    request_schema = GoodsReceivedNoteChangeStatusSchema
+    response_schema = GoodsReceivedNoteResponseSchema

@@ -3,6 +3,7 @@ from typing import List
 from sqlalchemy import select
 
 from flaskr import db
+from flaskr.core.mixins import ServicesAllMixin
 from flaskr.core.services import BaseService
 from flaskr.directory.models import (
     Counterparty,
@@ -20,12 +21,6 @@ __all__ = (
     'UnitsOfMeasurementService'
 )
 
-class DirectoryServiceMixin:
-    @classmethod
-    def all(cls, data):
-        organization_id = data.organization_id
-        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
-
 
 class OrganizationService(BaseService[Organization]):
     model = Organization
@@ -35,17 +30,17 @@ class OrganizationService(BaseService[Organization]):
         return db.session.scalars(select(Organization)).all()
 
 
-class CounterpartyService(DirectoryServiceMixin, BaseService[Counterparty]):
+class CounterpartyService(ServicesAllMixin, BaseService[Counterparty]):
     model = Counterparty
 
 
-class OperationTypeService(DirectoryServiceMixin, BaseService[OperationType]):
+class OperationTypeService(ServicesAllMixin, BaseService[OperationType]):
     model = OperationType
 
 
-class WarehouseService(DirectoryServiceMixin, BaseService[Warehouse]):
+class WarehouseService(ServicesAllMixin, BaseService[Warehouse]):
     model = Warehouse
 
 
-class UnitsOfMeasurementService(DirectoryServiceMixin, BaseService[UnitsOfMeasurement]):
+class UnitsOfMeasurementService(ServicesAllMixin, BaseService[UnitsOfMeasurement]):
     model = UnitsOfMeasurement

@@ -1,4 +1,3 @@
-from .document import *
 from .goods_received_note import *
 from .order import *
 from .invoice import *

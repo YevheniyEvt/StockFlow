@@ -29,7 +29,7 @@ class TaxInvoiceChangeStatusSchema(BaseModel):
 
 
 class TaxInvoiceListSchema(BaseModel):
-    invoice_id: int
+    organization_id: int
     counterparty_id: int | None = None
 
 

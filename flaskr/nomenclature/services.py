@@ -1,3 +1,4 @@
+from flaskr.core.mixins import ServicesAllMixin
 from flaskr.core.services import BaseService
 from flaskr.nomenclature.models import (
     Product,
@@ -10,9 +11,9 @@ __all__ = (
 )
 
 
-class ProductService(BaseService[Product]):
+class ProductService(ServicesAllMixin, BaseService[Product]):
     model = Product
 
 
-class ServiceService(BaseService[Service]):
+class ServiceService(ServicesAllMixin, BaseService[Service]):
     model = Service

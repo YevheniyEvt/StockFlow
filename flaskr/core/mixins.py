@@ -1,9 +1,11 @@
 from datetime import datetime
 from decimal import Decimal
 
+from sqlalchemy import select
 from sqlalchemy import Numeric, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, declared_attr
 
+from flaskr import db
 
 class CreatedUpdatedDateTimeMixin:
     """
@@ -33,3 +35,11 @@ class ItemsMixin:
             CheckConstraint("quantity >= 0", name=f"ck_{cls.__tablename__}_quantity_positive"),
             CheckConstraint("price_per_unit >= 0", name=f"ck_{cls.__tablename__}_price_per_unit_positive"),
         )
+
+
+
+class ServicesAllMixin:
+    @classmethod
+    def all(cls, data):
+        organization_id = data.organization_id
+        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()

@@ -1,7 +1,3 @@
-from typing import List
-
-from sqlalchemy import select
-
 from flaskr.core.services import BaseService
 from flaskr.documents.models import (
     Document,
@@ -12,6 +8,7 @@ from flaskr.documents.schemas import (
     OrderResponseSchema, InvoiceResponseSchema, TaxInvoiceResponseSchema,
     GoodsDeliveryNoteResponseSchema, GoodsReceivedNoteResponseSchema
 )
+from flaskr.documents.services.mixin import DocumentsAllMixin
 
 __all__ = (
     'DocumentService',
@@ -35,7 +32,7 @@ DOCUMENT_TYPE_RELATED_MODEL = {
 }
 
 
-class DocumentService(BaseService[Document]):
+class DocumentService(DocumentsAllMixin, BaseService[Document]):
     model = Document
 
     @staticmethod

@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.documents.schemas import (
     OrderUpdateSchema,
     OrderResponseSchema,
@@ -9,6 +6,7 @@ from flaskr.documents.schemas import (
     OrderCreateSchema,
 )
 from flaskr.documents.services import OrderService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'OrderDetailAPI',
@@ -20,48 +18,34 @@ __all__ = (
 )
 
 
-class OrderListAPI(MethodView):
-
-    def get(self):
-        data = OrderListSchema.model_validate(request.json)
-        items = OrderService.all(data)
-        return [OrderResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class OrderListAPI(ListAPI):
+    service = OrderService
+    request_schema = OrderListSchema
+    response_schema = OrderResponseSchema
 
 
-class OrderDetailAPI(MethodView):
-
-    def get(self, id):
-        order = OrderService.get_or_404(id)
-        return OrderResponseSchema.model_validate(order).model_dump(mode='json')
-
-class OrderCreateAPI(MethodView):
-
-    def post(self):
-        data = OrderCreateSchema.model_validate(request.json)
-        order = OrderService.create(data)
-        return OrderResponseSchema.model_validate(order).model_dump(mode='json'), 201
-
-class OrderUpdateAPI(MethodView):
-
-    def patch(self, id):
-        order = OrderService.get_or_404(id)
-        data = OrderUpdateSchema.model_validate(request.json)
-        order_update = OrderService.update(order, data)
-        return OrderResponseSchema.model_validate(order_update).model_dump(mode='json')
+class OrderDetailAPI(DetailAPI):
+    service = OrderService
+    response_schema = OrderResponseSchema
 
 
-class OrderDeleteAPI(MethodView):
-
-    def delete(self, id):
-        order = OrderService.get_or_404(id)
-        OrderService.delete(order)
-        return '', 204
+class OrderCreateAPI(CreateAPI):
+    service = OrderService
+    request_schema = OrderCreateSchema
+    response_schema = OrderResponseSchema
 
 
-class OrderChangeStatusAPI(MethodView):
+class OrderUpdateAPI(UpdateAPI):
+    service = OrderService
+    request_schema = OrderUpdateSchema
+    response_schema = OrderResponseSchema
 
-    def patch(self, id):
-        order = OrderService.get_or_404(id)
-        data = OrderChangeStatusSchema.model_validate(request.json)
-        order_update = OrderService.change_status(order, data)
-        return OrderResponseSchema.model_validate(order_update).model_dump(mode='json')
+
+class OrderDeleteAPI(DeleteAPI):
+    service = OrderService
+
+
+class OrderChangeStatusAPI(UpdateAPI):
+    service = OrderService
+    request_schema = OrderChangeStatusSchema
+    response_schema = OrderResponseSchema

@@ -28,7 +28,7 @@ class InvoiceChangeStatusSchema(BaseModel):
 
 
 class InvoiceListSchema(BaseModel):
-    order_id: int
+    organization_id: int
     counterparty_id: int | None = None
 
 

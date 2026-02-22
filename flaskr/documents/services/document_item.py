@@ -1,3 +1,5 @@
+from sqlalchemy import select
+
 from flaskr import db, Product, Service
 from flaskr.core.services import BaseService
 from flaskr.documents.models import (
@@ -31,3 +33,8 @@ class DocumentItemService(BaseService[DocumentItem]):
             service = db.session.get(Service, document_item.service_id)
             document_item.price_per_unit = service.price
             document_item.amount = document_item.quantity * service.price
+
+
+    def all(self, data):
+        document_id = data.document_id
+        return db.session.scalars(select(self.model).where(self.model.document_id == document_id)).all()

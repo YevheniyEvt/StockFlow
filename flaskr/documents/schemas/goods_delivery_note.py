@@ -28,7 +28,7 @@ class GoodsDeliveryNoteChangeStatusSchema(BaseModel):
 
 
 class GoodsDeliveryNoteListSchema(BaseModel):
-    invoice_id: int
+    organization_id: int
     counterparty_id: int | None = None
 
 

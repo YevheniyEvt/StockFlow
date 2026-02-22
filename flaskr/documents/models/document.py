@@ -28,6 +28,7 @@ __all__ = (
 class Document(CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'document'
 
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
     items: Mapped[List["DocumentItem"]] = relationship(back_populates="document", cascade="all, delete-orphan")
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
