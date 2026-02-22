@@ -23,14 +23,14 @@ class ProductListAPI(MethodView):
     def get(self):
         data = ProductListSchema.model_validate(request.json)
         items = ProductService.all(data)
-        return [ProductResponseSchema.model_validate(item).model_dump() for item in items]
+        return [ProductResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
 
 
 class ProductDetailAPI(MethodView):
 
     def get(self, id):
         product = ProductService.get_or_404(id)
-        return ProductResponseSchema.model_validate(product).model_dump()
+        return ProductResponseSchema.model_validate(product).model_dump(mode='json')
 
 
 class ProductCreateAPI(MethodView):
@@ -38,7 +38,7 @@ class ProductCreateAPI(MethodView):
     def post(self):
         data = ProductCreateSchema.model_validate(request.json)
         product = ProductService.create(data)
-        return ProductResponseSchema.model_validate(product).model_dump(), 201
+        return ProductResponseSchema.model_validate(product).model_dump(mode='json'), 201
 
 
 class ProductUpdateAPI(MethodView):
@@ -47,7 +47,7 @@ class ProductUpdateAPI(MethodView):
         product = ProductService.get_or_404(id)
         data = ProductUpdateSchema.model_validate(request.json)
         product_update = ProductService.update(product, data)
-        return ProductResponseSchema.model_validate(product_update).model_dump()
+        return ProductResponseSchema.model_validate(product_update).model_dump(mode='json')
 
 
 class ProductDeleteAPI(MethodView):

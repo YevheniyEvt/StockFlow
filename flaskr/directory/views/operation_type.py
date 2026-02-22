@@ -23,14 +23,14 @@ class OperationTypeListAPI(MethodView):
     def get(self):
         data = OperationTypeListSchema.model_validate(request.json)
         items = OperationTypeService.all(data)
-        return [OperationTypeResponseSchema.model_validate(item).model_dump() for item in items]
+        return [OperationTypeResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
 
 
 class OperationTypeDetailAPI(MethodView):
 
     def get(self, id):
         operation_type = OperationTypeService.get_or_404(id)
-        return OperationTypeResponseSchema.model_validate(operation_type).model_dump()
+        return OperationTypeResponseSchema.model_validate(operation_type).model_dump(mode='json')
 
 
 class OperationTypeCreateAPI(MethodView):
@@ -38,7 +38,7 @@ class OperationTypeCreateAPI(MethodView):
     def post(self):
         data = OperationTypeCreateSchema.model_validate(request.json)
         operation_type = OperationTypeService.create(data)
-        return OperationTypeResponseSchema.model_validate(operation_type).model_dump(), 201
+        return OperationTypeResponseSchema.model_validate(operation_type).model_dump(mode='json'), 201
 
 
 class OperationTypeUpdateAPI(MethodView):
@@ -47,7 +47,7 @@ class OperationTypeUpdateAPI(MethodView):
         operation_type = OperationTypeService.get_or_404(id)
         data = OperationTypeUpdateSchema.model_validate(request.json)
         operation_type_update = OperationTypeService.update(operation_type, data)
-        return OperationTypeResponseSchema.model_validate(operation_type_update).model_dump()
+        return OperationTypeResponseSchema.model_validate(operation_type_update).model_dump(mode='json')
 
 
 class OperationTypeDeleteAPI(MethodView):

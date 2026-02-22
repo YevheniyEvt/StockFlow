@@ -23,14 +23,14 @@ class CounterpartyListAPI(MethodView):
     def get(self):
         data = CounterpartyListSchema.model_validate(request.json)
         items = CounterpartyService.all(data)
-        return [CounterpartyResponseSchema.model_validate(item).model_dump() for item in items]
+        return [CounterpartyResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
 
 
 class CounterpartyDetailAPI(MethodView):
 
     def get(self, id):
         counterparty = CounterpartyService.get_or_404(id)
-        return CounterpartyResponseSchema.model_validate(counterparty).model_dump()
+        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(mode='json')
 
 
 class CounterpartyCreateAPI(MethodView):
@@ -38,7 +38,7 @@ class CounterpartyCreateAPI(MethodView):
     def post(self):
         data = CounterpartyCreateSchema.model_validate(request.json)
         counterparty = CounterpartyService.create(data)
-        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(), 201
+        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(mode='json'), 201
 
 
 class CounterpartyUpdateAPI(MethodView):
@@ -47,7 +47,7 @@ class CounterpartyUpdateAPI(MethodView):
         counterparty = CounterpartyService.get_or_404(id)
         data = CounterpartyUpdateSchema.model_validate(request.json)
         counterparty_update = CounterpartyService.update(counterparty, data)
-        return CounterpartyResponseSchema.model_validate(counterparty_update).model_dump()
+        return CounterpartyResponseSchema.model_validate(counterparty_update).model_dump(mode='json')
 
 
 class CounterpartyDeleteAPI(MethodView):
