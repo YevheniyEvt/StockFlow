@@ -1,10 +1,8 @@
-from typing import List
-
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, ForeignKey
 
 from flaskr import db
-from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
 
 __all__ = (
     'Organization',

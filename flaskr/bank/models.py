@@ -1,8 +1,10 @@
+from typing import List
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, ForeignKey
 
 from flaskr import db
-from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
 
 
 __all__ = (
@@ -39,5 +41,11 @@ class Currency(CreatedUpdatedDateTimeMixin, db.Model):
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     name: Mapped[str] = mapped_column(String(50))
-    bank_account_company: Mapped["BankAccountCompany"] = relationship(back_populates="currency")
-    bank_account_counterparty: Mapped["BankAccountCounterparty"] = relationship(back_populates="currency")
+    bank_account_company: Mapped[List["BankAccountCompany"]] = relationship(
+        back_populates="currency",
+        foreign_keys="BankAccountCompany.currency_id",
+    )
+    bank_account_counterparty: Mapped[List["BankAccountCounterparty"]] = relationship(
+        back_populates="currency",
+        foreign_keys="BankAccountCounterparty.currency_id",
+    )

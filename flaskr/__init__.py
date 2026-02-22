@@ -7,6 +7,7 @@ from flaskr.models import *
 from flaskr.directory.models import *
 from flaskr.nomenclature.models import *
 from flaskr.documents.models import *
+from flaskr.bank.models import *
 
 
 def init_app():
@@ -29,6 +30,7 @@ def init_app():
         from .directory import urls
         from .documents import urls
         from .nomenclature import urls
+        from .bank import urls
         from .reports import routes
 
         # Register Blueprints
@@ -36,6 +38,7 @@ def init_app():
         app.register_blueprint(directory.directory_bp)
         app.register_blueprint(documents.documents_bp)
         app.register_blueprint(nomenclature.nomenclature_bp)
+        app.register_blueprint(bank.bank_bp)
         app.register_blueprint(reports.routes.reports_bp)
 
         return app

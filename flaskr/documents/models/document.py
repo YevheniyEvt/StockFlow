@@ -4,8 +4,8 @@ from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Enum, ForeignKey
 
-from flaskr import db, OperationType
-from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+from flaskr import db
+from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
 from flaskr.documents.models.document_enum import (
     DocumentType,
     GoodsReceivedNoteStatus,

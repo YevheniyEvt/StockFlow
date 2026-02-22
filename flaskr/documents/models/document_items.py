@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, relationship, Mapped
 
 from flaskr import db
-from flaskr.models.mixins import ItemsMixin, CreatedUpdatedDateTimeMixin
+from flaskr.core.mixins import ItemsMixin, CreatedUpdatedDateTimeMixin
 
 __all__ = (
     'DocumentItem',

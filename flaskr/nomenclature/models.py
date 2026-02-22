@@ -10,7 +10,7 @@ __all__ = (
 )
 
 from flaskr import db
-from flaskr.models.mixins import CreatedUpdatedDateTimeMixin
+from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
 
 
 class BaseProductService:
