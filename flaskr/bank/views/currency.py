@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.bank.schemas import (
     CurrencyUpdateSchema,
     CurrencyResponseSchema,
@@ -8,6 +5,7 @@ from flaskr.bank.schemas import (
     CurrencyCreateSchema,
 )
 from flaskr.bank.services import CurrencyService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'CurrencyDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class CurrencyListAPI(MethodView):
-
-    def get(self):
-        data = CurrencyListSchema.model_validate(request.json)
-        items = CurrencyService.all(data)
-        return [CurrencyResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class CurrencyListAPI(ListAPI):
+    service = CurrencyService
+    request_schema = CurrencyListSchema
+    response_schema = CurrencyResponseSchema
 
 
-class CurrencyDetailAPI(MethodView):
-
-    def get(self, id):
-        currency = CurrencyService.get_or_404(id)
-        return CurrencyResponseSchema.model_validate(currency).model_dump(mode='json')
+class CurrencyDetailAPI(DetailAPI):
+    service = CurrencyService
+    response_schema = CurrencyResponseSchema
 
 
-class CurrencyCreateAPI(MethodView):
-
-    def post(self):
-        data = CurrencyCreateSchema.model_validate(request.json)
-        currency = CurrencyService.create(data)
-        return CurrencyResponseSchema.model_validate(currency).model_dump(mode='json'), 201
+class CurrencyCreateAPI(CreateAPI):
+    service = CurrencyService
+    request_schema = CurrencyCreateSchema
+    response_schema = CurrencyResponseSchema
 
 
-class CurrencyUpdateAPI(MethodView):
-
-    def patch(self, id):
-        currency = CurrencyService.get_or_404(id)
-        data = CurrencyUpdateSchema.model_validate(request.json)
-        currency_update = CurrencyService.update(currency, data)
-        return CurrencyResponseSchema.model_validate(currency_update).model_dump(mode='json')
+class CurrencyUpdateAPI(UpdateAPI):
+    service = CurrencyService
+    request_schema = CurrencyUpdateSchema
+    response_schema = CurrencyResponseSchema
 
 
-class CurrencyDeleteAPI(MethodView):
-
-    def delete(self, id):
-        currency = CurrencyService.get_or_404(id)
-        CurrencyService.delete(currency)
-        return '', 204
+class CurrencyDeleteAPI(DeleteAPI):
+    service = CurrencyService

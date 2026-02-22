@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.bank.schemas import (
     BankAccountCompanyUpdateSchema,
     BankAccountCompanyResponseSchema,
@@ -8,6 +5,7 @@ from flaskr.bank.schemas import (
     BankAccountCompanyCreateSchema,
 )
 from flaskr.bank.services import BankAccountCompanyService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'BankAccountCompanyDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class BankAccountCompanyListAPI(MethodView):
-
-    def get(self):
-        data = BankAccountCompanyListSchema.model_validate(request.json)
-        items = BankAccountCompanyService.all(data)
-        return [BankAccountCompanyResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class BankAccountCompanyListAPI(ListAPI):
+    service = BankAccountCompanyService
+    request_schema = BankAccountCompanyListSchema
+    response_schema = BankAccountCompanyResponseSchema
 
 
-class BankAccountCompanyDetailAPI(MethodView):
-
-    def get(self, id):
-        bank_account_company = BankAccountCompanyService.get_or_404(id)
-        return BankAccountCompanyResponseSchema.model_validate(bank_account_company).model_dump(mode='json')
+class BankAccountCompanyDetailAPI(DetailAPI):
+    service = BankAccountCompanyService
+    response_schema = BankAccountCompanyResponseSchema
 
 
-class BankAccountCompanyCreateAPI(MethodView):
-
-    def post(self):
-        data = BankAccountCompanyCreateSchema.model_validate(request.json)
-        bank_account_company = BankAccountCompanyService.create(data)
-        return BankAccountCompanyResponseSchema.model_validate(bank_account_company).model_dump(mode='json'), 201
+class BankAccountCompanyCreateAPI(CreateAPI):
+    service = BankAccountCompanyService
+    request_schema = BankAccountCompanyCreateSchema
+    response_schema = BankAccountCompanyResponseSchema
 
 
-class BankAccountCompanyUpdateAPI(MethodView):
-
-    def patch(self, id):
-        bank_account_company = BankAccountCompanyService.get_or_404(id)
-        data = BankAccountCompanyUpdateSchema.model_validate(request.json)
-        bank_account_company_update = BankAccountCompanyService.update(bank_account_company, data)
-        return BankAccountCompanyResponseSchema.model_validate(bank_account_company_update).model_dump(mode='json')
+class BankAccountCompanyUpdateAPI(UpdateAPI):
+    service = BankAccountCompanyService
+    request_schema = BankAccountCompanyUpdateSchema
+    response_schema = BankAccountCompanyResponseSchema
 
 
-class BankAccountCompanyDeleteAPI(MethodView):
-
-    def delete(self, id):
-        bank_account_company = BankAccountCompanyService.get_or_404(id)
-        BankAccountCompanyService.delete(bank_account_company)
-        return '', 204
+class BankAccountCompanyDeleteAPI(DeleteAPI):
+    service = BankAccountCompanyService
