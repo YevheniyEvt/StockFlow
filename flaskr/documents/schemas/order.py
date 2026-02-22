@@ -34,7 +34,7 @@ class OrderListSchema(BaseModel):
 class OrderResponseSchema(BaseModel):
     id: int
     status: OrderStatus
-    # items: List[DocumentItem] | None = None
+    items: List["DocumentItemResponseSchema"] | None = None
     created_at: datetime
     updated_at: datetime
 

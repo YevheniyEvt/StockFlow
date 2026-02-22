@@ -18,7 +18,7 @@ def init_app():
     # handle error from pydantic validation
     @app.errorhandler(ValidationError)
     def handle_validation_error(e):
-        return {"errors": e.errors()}, 400
+        return {"errors": e.errors(include_context=False)}, 400
 
     db.init_app(app)
 
