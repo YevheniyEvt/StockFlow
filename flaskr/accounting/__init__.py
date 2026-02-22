@@ -1,6 +1,5 @@
 from flask import Blueprint
 
-# Blueprint Configuration
 accounting_bp = Blueprint(
-    'accounting_bp', __name__,
+    'accounting_bp', __name__, url_prefix='/accounting'
 )

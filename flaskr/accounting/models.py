@@ -1,20 +1,17 @@
-import enum
 from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Enum, ForeignKey, Numeric
 
+from flaskr import db
+from flaskr.accounting.accounting_enum import ProductMovementStatus, FinancialOperationsStatus
+
 __all__ = (
     'ProductMovement',
     'FinancialOperations',
 )
 
-from flaskr import db
-
-class ProductMovementStatus(enum.Enum):
-    SELLING = "selling"
-    PURCHASE = "purchase"
 
 class ProductMovement(db.Model):
     __tablename__ = 'product_movement'
@@ -26,10 +23,6 @@ class ProductMovement(db.Model):
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     date: Mapped[datetime] = mapped_column(default=datetime.now())
 
-
-class FinancialOperationsStatus(enum.Enum):
-    DEBITING = "debiting"
-    CREDITING = "crediting"
 
 class FinancialOperations(db.Model):
     __tablename__ = 'financial_operations'

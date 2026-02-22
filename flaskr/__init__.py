@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from flaskr.database import db
 
-from flaskr.models import *
+from flaskr.accounting.models import *
 from flaskr.directory.models import *
 from flaskr.nomenclature.models import *
 from flaskr.documents.models import *
@@ -26,19 +26,19 @@ def init_app():
     with app.app_context():
         db.create_all()
         # Import parts of our application
-        from .accounting import routes
+        from .accounting import urls
         from .directory import urls
         from .documents import urls
         from .nomenclature import urls
         from .bank import urls
-        from .reports import routes
+        from .reports import urls
 
         # Register Blueprints
-        app.register_blueprint(accounting.routes.accounting_bp)
+        app.register_blueprint(accounting.accounting_bp)
         app.register_blueprint(directory.directory_bp)
         app.register_blueprint(documents.documents_bp)
         app.register_blueprint(nomenclature.nomenclature_bp)
         app.register_blueprint(bank.bank_bp)
-        app.register_blueprint(reports.routes.reports_bp)
+        app.register_blueprint(reports.reports_bp)
 
         return app
