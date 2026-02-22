@@ -20,6 +20,12 @@ __all__ = (
     'UnitsOfMeasurementService'
 )
 
+class DirectoryServiceMixin:
+    @classmethod
+    def all(cls, data):
+        organization_id = data.organization_id
+        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
+
 
 class OrganizationService(BaseService[Organization]):
     model = Organization
@@ -29,17 +35,17 @@ class OrganizationService(BaseService[Organization]):
         return db.session.scalars(select(Organization)).all()
 
 
-class CounterpartyService(BaseService[Counterparty]):
+class CounterpartyService(DirectoryServiceMixin, BaseService[Counterparty]):
     model = Counterparty
 
 
-class OperationTypeService(BaseService[OperationType]):
+class OperationTypeService(DirectoryServiceMixin, BaseService[OperationType]):
     model = OperationType
 
 
-class WarehouseService(BaseService[Warehouse]):
+class WarehouseService(DirectoryServiceMixin, BaseService[Warehouse]):
     model = Warehouse
 
 
-class UnitsOfMeasurementService(BaseService[UnitsOfMeasurement]):
+class UnitsOfMeasurementService(DirectoryServiceMixin, BaseService[UnitsOfMeasurement]):
     model = UnitsOfMeasurement

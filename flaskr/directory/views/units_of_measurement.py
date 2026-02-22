@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.directory.schemas import (
     UnitsOfMeasurementCreateSchema,
     UnitsOfMeasurementUpdateSchema,
@@ -8,6 +5,7 @@ from flaskr.directory.schemas import (
     UnitsOfMeasurementListSchema,
 )
 from flaskr.directory.services import UnitsOfMeasurementService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'UnitsOfMeasurementDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class UnitsOfMeasurementListAPI(MethodView):
-
-    def get(self):
-        data = UnitsOfMeasurementListSchema.model_validate(request.json)
-        items = UnitsOfMeasurementService.all(data)
-        return [UnitsOfMeasurementResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class UnitsOfMeasurementListAPI(ListAPI):
+    service = UnitsOfMeasurementService
+    request_schema = UnitsOfMeasurementListSchema
+    response_schema = UnitsOfMeasurementResponseSchema
 
 
-class UnitsOfMeasurementDetailAPI(MethodView):
-
-    def get(self, id):
-        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
-        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement).model_dump(mode='json')
+class UnitsOfMeasurementDetailAPI(DetailAPI):
+    service = UnitsOfMeasurementService
+    response_schema = UnitsOfMeasurementResponseSchema
 
 
-class UnitsOfMeasurementCreateAPI(MethodView):
-
-    def post(self):
-        data = UnitsOfMeasurementCreateSchema.model_validate(request.json)
-        units_of_measurement = UnitsOfMeasurementService.create(data)
-        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement).model_dump(mode='json'), 201
+class UnitsOfMeasurementCreateAPI(CreateAPI):
+    service = UnitsOfMeasurementService
+    request_schema = UnitsOfMeasurementCreateSchema
+    response_schema = UnitsOfMeasurementResponseSchema
 
 
-class UnitsOfMeasurementUpdateAPI(MethodView):
-
-    def patch(self, id):
-        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
-        data = UnitsOfMeasurementUpdateSchema.model_validate(request.json)
-        units_of_measurement_update = UnitsOfMeasurementService.update(units_of_measurement, data)
-        return UnitsOfMeasurementResponseSchema.model_validate(units_of_measurement_update).model_dump(mode='json')
+class UnitsOfMeasurementUpdateAPI(UpdateAPI):
+    service = UnitsOfMeasurementService
+    request_schema = UnitsOfMeasurementUpdateSchema
+    response_schema = UnitsOfMeasurementResponseSchema
 
 
-class UnitsOfMeasurementDeleteAPI(MethodView):
-
-    def delete(self, id):
-        units_of_measurement = UnitsOfMeasurementService.get_or_404(id)
-        UnitsOfMeasurementService.delete(units_of_measurement)
-        return '', 204
+class UnitsOfMeasurementDeleteAPI(DeleteAPI):
+    service = UnitsOfMeasurementService

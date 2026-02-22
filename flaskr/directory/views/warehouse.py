@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.directory.schemas import (
     WarehouseCreateSchema,
     WarehouseUpdateSchema,
@@ -8,6 +5,7 @@ from flaskr.directory.schemas import (
     WarehouseListSchema,
 )
 from flaskr.directory.services import WarehouseService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'WarehouseDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class WarehouseListAPI(MethodView):
-
-    def get(self):
-        data = WarehouseListSchema.model_validate(request.json)
-        items = WarehouseService.all(data)
-        return [WarehouseResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class WarehouseListAPI(ListAPI):
+    service = WarehouseService
+    request_schema = WarehouseListSchema
+    response_schema = WarehouseResponseSchema
 
 
-class WarehouseDetailAPI(MethodView):
-
-    def get(self, id):
-        warehouse = WarehouseService.get_or_404(id)
-        return WarehouseResponseSchema.model_validate(warehouse).model_dump(mode='json')
+class WarehouseDetailAPI(DetailAPI):
+    service = WarehouseService
+    response_schema = WarehouseResponseSchema
 
 
-class WarehouseCreateAPI(MethodView):
-
-    def post(self):
-        data = WarehouseCreateSchema.model_validate(request.json)
-        warehouse = WarehouseService.create(data)
-        return WarehouseResponseSchema.model_validate(warehouse).model_dump(mode='json'), 201
+class WarehouseCreateAPI(CreateAPI):
+    service = WarehouseService
+    request_schema = WarehouseCreateSchema
+    response_schema = WarehouseResponseSchema
 
 
-class WarehouseUpdateAPI(MethodView):
-
-    def patch(self, id):
-        warehouse = WarehouseService.get_or_404(id)
-        data = WarehouseUpdateSchema.model_validate(request.json)
-        warehouse_update = WarehouseService.update(warehouse, data)
-        return WarehouseResponseSchema.model_validate(warehouse_update).model_dump(mode='json')
+class WarehouseUpdateAPI(UpdateAPI):
+    service = WarehouseService
+    request_schema = WarehouseUpdateSchema
+    response_schema = WarehouseResponseSchema
 
 
-class WarehouseDeleteAPI(MethodView):
-
-    def delete(self, id):
-        warehouse = WarehouseService.get_or_404(id)
-        WarehouseService.delete(warehouse)
-        return '', 204
+class WarehouseDeleteAPI(DeleteAPI):
+    service = WarehouseService

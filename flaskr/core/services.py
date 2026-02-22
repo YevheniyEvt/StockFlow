@@ -1,3 +1,5 @@
+import abc
+from abc import abstractmethod
 from typing import Type, TypeVar, Generic, List
 
 from flask import abort
@@ -10,7 +12,7 @@ from flaskr import db
 ModelType = TypeVar("ModelType", bound=DeclarativeBase)
 
 
-class BaseService(Generic[ModelType]):
+class BaseService(Generic[ModelType], abc.ABC):
     """
     Base class for CRUD operations on SQLAlchemy models.
     
@@ -54,7 +56,13 @@ class BaseService(Generic[ModelType]):
             abort(404)
         return instance
 
+
     @classmethod
+    @abstractmethod
     def all(cls, data) -> list[ModelType]:
-        organization_id = data.organization_id
-        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
+        """
+        Get all instances of this service
+        :param data: json from request
+        :return: list of instances of this service
+        """
+        pass

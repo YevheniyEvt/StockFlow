@@ -1,12 +1,10 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.directory.schemas import (
     OrganizationCreateSchema,
     OrganizationUpdateSchema,
     OrganizationResponseSchema
 )
 from flaskr.directory.services import OrganizationService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'OrganizationDetailAPI',
@@ -17,40 +15,28 @@ __all__ = (
 )
 
 
-class OrganizationListAPI(MethodView):
-
-    def get(self):
-        items = OrganizationService.all()
-        return [OrganizationResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
-
-
-class OrganizationDetailAPI(MethodView):
-
-    def get(self, id):
-        organization = OrganizationService.get_or_404(id)
-        return OrganizationResponseSchema.model_validate(organization).model_dump(mode='json')
+class OrganizationListAPI(ListAPI):
+    service = OrganizationService
+    request_schema = None
+    response_schema = OrganizationResponseSchema
 
 
-class OrganizationCreateAPI(MethodView):
-
-    def post(self):
-        data = OrganizationCreateSchema.model_validate(request.json)
-        organization = OrganizationService.create(data)
-        return OrganizationResponseSchema.model_validate(organization).model_dump(mode='json'), 201
+class OrganizationDetailAPI(DetailAPI):
+    service = OrganizationService
+    response_schema = OrganizationResponseSchema
 
 
-class OrganizationUpdateAPI(MethodView):
-
-    def patch(self, id):
-        organization = OrganizationService.get_or_404(id)
-        data = OrganizationUpdateSchema.model_validate(request.json)
-        organization_update = OrganizationService.update(organization, data)
-        return OrganizationResponseSchema.model_validate(organization_update).model_dump(mode='json')
+class OrganizationCreateAPI(CreateAPI):
+    service = OrganizationService
+    request_schema = OrganizationCreateSchema
+    response_schema = OrganizationResponseSchema
 
 
-class OrganizationDeleteAPI(MethodView):
+class OrganizationUpdateAPI(UpdateAPI):
+    service = OrganizationService
+    request_schema = OrganizationUpdateSchema
+    response_schema = OrganizationResponseSchema
 
-    def delete(self, id):
-        organization = OrganizationService.get_or_404(id)
-        OrganizationService.delete(organization)
-        return '', 204
+
+class OrganizationDeleteAPI(DeleteAPI):
+    service = OrganizationService

@@ -1,6 +1,3 @@
-from flask import request
-from flask.views import MethodView
-
 from flaskr.directory.schemas import (
     CounterpartyCreateSchema,
     CounterpartyUpdateSchema,
@@ -8,6 +5,7 @@ from flaskr.directory.schemas import (
     CounterpartyListSchema,
 )
 from flaskr.directory.services import CounterpartyService
+from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
 
 __all__ = (
     'CounterpartyDetailAPI',
@@ -18,41 +16,28 @@ __all__ = (
 )
 
 
-class CounterpartyListAPI(MethodView):
-
-    def get(self):
-        data = CounterpartyListSchema.model_validate(request.json)
-        items = CounterpartyService.all(data)
-        return [CounterpartyResponseSchema.model_validate(item).model_dump(mode='json') for item in items]
+class CounterpartyListAPI(ListAPI):
+    service = CounterpartyService
+    request_schema = CounterpartyListSchema
+    response_schema = CounterpartyResponseSchema
 
 
-class CounterpartyDetailAPI(MethodView):
-
-    def get(self, id):
-        counterparty = CounterpartyService.get_or_404(id)
-        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(mode='json')
+class CounterpartyDetailAPI(DetailAPI):
+    service = CounterpartyService
+    response_schema = CounterpartyResponseSchema
 
 
-class CounterpartyCreateAPI(MethodView):
-
-    def post(self):
-        data = CounterpartyCreateSchema.model_validate(request.json)
-        counterparty = CounterpartyService.create(data)
-        return CounterpartyResponseSchema.model_validate(counterparty).model_dump(mode='json'), 201
+class CounterpartyCreateAPI(CreateAPI):
+    service = CounterpartyService
+    request_schema = CounterpartyCreateSchema
+    response_schema = CounterpartyResponseSchema
 
 
-class CounterpartyUpdateAPI(MethodView):
-
-    def patch(self, id):
-        counterparty = CounterpartyService.get_or_404(id)
-        data = CounterpartyUpdateSchema.model_validate(request.json)
-        counterparty_update = CounterpartyService.update(counterparty, data)
-        return CounterpartyResponseSchema.model_validate(counterparty_update).model_dump(mode='json')
+class CounterpartyUpdateAPI(UpdateAPI):
+    service = CounterpartyService
+    request_schema = CounterpartyUpdateSchema
+    response_schema = CounterpartyResponseSchema
 
 
-class CounterpartyDeleteAPI(MethodView):
-
-    def delete(self, id):
-        counterparty = CounterpartyService.get_or_404(id)
-        CounterpartyService.delete(counterparty)
-        return '', 204
+class CounterpartyDeleteAPI(DeleteAPI):
+    service = CounterpartyService
