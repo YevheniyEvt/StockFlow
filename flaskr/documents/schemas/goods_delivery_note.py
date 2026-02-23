@@ -17,6 +17,7 @@ __all__ = (
 
 class GoodsDeliveryNoteCreateSchema(BaseModel):
     counterparty_id: int
+    invoice_id: int
 
 
 class GoodsDeliveryNoteUpdateSchema(BaseModel):
