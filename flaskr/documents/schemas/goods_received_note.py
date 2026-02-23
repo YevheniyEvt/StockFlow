@@ -41,3 +41,6 @@ class GoodsReceivedNoteResponseSchema(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class HeldGoodsReceivedNoteSchema(BaseModel):
+    warehouse_id: int
