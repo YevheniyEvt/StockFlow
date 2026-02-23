@@ -3,6 +3,7 @@ from abc import abstractmethod
 from typing import Type, TypeVar, Generic, List
 
 from flask import abort
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase
 
@@ -30,7 +31,7 @@ class BaseService(Generic[ModelType], abc.ABC):
             )
 
     @staticmethod
-    def update(instance, data) -> ModelType:
+    def update(instance, data: BaseModel) -> ModelType:
         instance.update_from_json(data)
         db.session.commit()
         db.session.refresh(instance)
@@ -42,7 +43,7 @@ class BaseService(Generic[ModelType], abc.ABC):
         db.session.commit()
 
     @classmethod
-    def create(cls, data) -> ModelType:
+    def create(cls, data: BaseModel) -> ModelType:
         instance = cls.model(**data.model_dump())
         db.session.add(instance)
         db.session.commit()
@@ -59,7 +60,7 @@ class BaseService(Generic[ModelType], abc.ABC):
 
     @classmethod
     @abstractmethod
-    def all(cls, data) -> list[ModelType]:
+    def all(cls, data: BaseModel) -> list[ModelType]:
         """
         Get all instances of this service
         :param data: json from request

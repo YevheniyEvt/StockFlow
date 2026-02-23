@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from sqlalchemy import select
 
 from flaskr import db, Product, Service
@@ -15,7 +16,7 @@ class DocumentItemService(BaseService[DocumentItem]):
     model = DocumentItem
 
     @classmethod
-    def create(cls, data) -> DocumentItem:
+    def create(cls, data: BaseModel) -> DocumentItem:
         document_item = DocumentItem(**data.model_dump())
         cls._set_item_price_amount(document_item)
         db.session.add(document_item)
@@ -35,6 +36,7 @@ class DocumentItemService(BaseService[DocumentItem]):
             document_item.amount = document_item.quantity * service.price
 
 
-    def all(self, data):
+    @classmethod
+    def all(cls, data: BaseModel):
         document_id = data.document_id
-        return db.session.scalars(select(self.model).where(self.model.document_id == document_id)).all()
+        return db.session.scalars(select(cls.model).where(cls.model.document_id == document_id)).all()

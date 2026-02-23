@@ -17,6 +17,8 @@ __all__ = (
 
 class InvoiceCreateSchema(BaseModel):
     counterparty_id: int
+    order_id: int
+    payment_final_date: datetime
 
 
 class InvoiceUpdateSchema(BaseModel):
@@ -35,7 +37,7 @@ class InvoiceListSchema(BaseModel):
 class InvoiceResponseSchema(BaseModel):
     id: int
     status: InvoiceStatus
-    # items: List[DocumentItem] | None = None
+    items: List["DocumentItemResponseSchema"]
     payment_final_date: datetime
     created_at: datetime
     updated_at: datetime
