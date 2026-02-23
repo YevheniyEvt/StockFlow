@@ -14,12 +14,11 @@ class InvoiceService(DocumentsAllMixin, CreateDocumentItemMixin, BaseService[Inv
 
     @classmethod
     def create(cls, data):
-        invoice = super().create(data)
-        invoice_id = invoice.id
+        invoice = super().create(data, commit=False)
         order = invoice.order
         order.status = OrderStatus.CONFIRMED_BY_CLIENT
-        db.session.add(order)
-        db.session.commit()
         for item in order.items:
-            cls._create_document_item(item, invoice_id)
+            cls._create_document_item(item, invoice.id)
+        db.session.commit()
+        db.session.refresh(invoice)
         return invoice

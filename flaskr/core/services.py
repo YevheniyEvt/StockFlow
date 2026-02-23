@@ -43,11 +43,14 @@ class BaseService(Generic[ModelType], abc.ABC):
         db.session.commit()
 
     @classmethod
-    def create(cls, data: BaseModel) -> ModelType:
+    def create(cls, data: BaseModel, commit: bool = True) -> ModelType:
         instance = cls.model(**data.model_dump())
         db.session.add(instance)
-        db.session.commit()
-        db.session.refresh(instance)
+        if commit:
+            db.session.commit()
+            db.session.refresh(instance)
+        else:
+            db.session.flush()
         return instance
 
     @classmethod

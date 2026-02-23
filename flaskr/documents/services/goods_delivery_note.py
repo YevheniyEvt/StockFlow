@@ -20,9 +20,9 @@ class GoodsDeliveryNoteService(DocumentsAllMixin, CreateDocumentItemMixin, BaseS
 
     @classmethod
     def create(cls, data):
-        goods_delivery_note = super().create(data)
-        goods_delivery_note_id = goods_delivery_note.id
-        invoice = goods_delivery_note.invoice
-        for item in invoice.items:
-            cls._create_document_item(item, goods_delivery_note_id)
+        goods_delivery_note = super().create(data, commit=False)
+        for item in goods_delivery_note.invoice.items:
+            cls._create_document_item(item, goods_delivery_note.id)
+        db.session.commit()
+        db.session.refresh(goods_delivery_note)
         return goods_delivery_note

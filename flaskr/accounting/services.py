@@ -9,7 +9,7 @@ class ProductMovementService:
     model = ProductMovement
 
     @classmethod
-    def create(cls, item: "DocumentItem", warehouse_id: int):
+    def create(cls, item: "DocumentItem", warehouse_id: int, commit: bool = True):
         product_movement = cls.model(
             warehouse_id=warehouse_id,
             product_id=item.product_id,
@@ -20,6 +20,7 @@ class ProductMovementService:
             amount=item.amount,
         )
         db.session.add(product_movement)
-        db.session.commit()
+        if commit:
+            db.session.commit()
 
 

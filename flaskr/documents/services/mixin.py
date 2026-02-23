@@ -22,11 +22,10 @@ class CreateDocumentItemMixin:
     def _create_document_item(cls, item, document_id):
         document_item = DocumentItem(
             document_id=document_id,
-            product_id=item.product.id,
-            service_id=item.service.id,
+            product_id=item.product_id,
+            service_id=item.service_id,
             quantity=item.quantity,
             price_per_unit=item.price_per_unit,
             amount=item.amount,
         )
         db.session.add(document_item)
-        db.session.commit()
