@@ -1,8 +1,9 @@
 from datetime import datetime
+from decimal import Decimal
 from typing import List
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Enum, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
+from sqlalchemy import Enum, ForeignKey, Numeric, String, DateTime, CheckConstraint
 
 from flaskr import db
 from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
@@ -30,12 +31,29 @@ class Document(CreatedUpdatedDateTimeMixin, db.Model):
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
+    operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
+    contract_id: Mapped[int] = mapped_column(ForeignKey('contract.id'))
+    warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'))
+
     items: Mapped[List["DocumentItem"]] = relationship(back_populates="document", cascade="all, delete-orphan")
+
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
+    amount: Mapped[Decimal] = mapped_column(Numeric(10,2))
+    comment: Mapped[str | None] = mapped_column(String(50))
+    document_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
     __mapper_args__ = {
         "polymorphic_on": document_type,
     }
+
+    @declared_attr.directive
+    def __table_args__(cls):
+        return (
+            CheckConstraint(
+                "document_date >= CURRENT_TIMESTAMP",
+                name=f"ck_{cls.__tablename__}_document_date_not_past",
+            ),
+        )
 
 
 class GoodsReceivedNote(Document):
@@ -53,6 +71,7 @@ class GoodsReceivedNote(Document):
     }
 
 
+
 class Order(Document):
     __tablename__ = 'order'
 
@@ -61,11 +80,6 @@ class Order(Document):
         back_populates="order",
         foreign_keys="Invoice.order_id"
     )
-    # operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
-    # operation_type: Mapped["OperationType"] = relationship(
-    #     back_populates="orders",
-    #     foreign_keys=[operation_type_id]
-    # )
     status: Mapped[OrderStatus] = mapped_column(
         Enum(OrderStatus, native_enum=False),
         default=OrderStatus.DRAFT
@@ -97,6 +111,15 @@ class Invoice(Document):
     __mapper_args__ = {
         "polymorphic_identity": DocumentType.INVOICE,
     }
+
+    @declared_attr.directive
+    def __table_args__(cls):
+        return (
+            CheckConstraint(
+                "payment_final_date >= CURRENT_TIMESTAMP",
+                name=f"ck_{cls.__tablename__}_payment_final_date_not_past",
+            ),
+        )
 
 
 class GoodsDeliveryNote(Document):

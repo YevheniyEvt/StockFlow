@@ -1,9 +1,9 @@
 from datetime import datetime
-from typing import List
+from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
-from flaskr import DocumentItem
+from flaskr import OperationType
 from flaskr.documents.models.document_enum import GoodsReceivedNoteStatus
 
 __all__ = (
@@ -21,6 +21,12 @@ class GoodsReceivedNoteCreateSchema(BaseModel):
 
 class GoodsReceivedNoteUpdateSchema(BaseModel):
     counterparty_id: str | None = None
+    organization_id: int | None = None
+    warehouse_id : int | None = None
+    contract_id: int | None = None
+    comment: str | None = None
+    document_date: datetime | None = None
+    operation_type: OperationType | None = None
 
 
 class GoodsReceivedNoteChangeStatusSchema(BaseModel):
@@ -35,12 +41,18 @@ class GoodsReceivedNoteListSchema(BaseModel):
 class GoodsReceivedNoteResponseSchema(BaseModel):
     id: int
     status: GoodsReceivedNoteStatus
-    # items: List[DocumentItem] | None = None
-    held_date: datetime | None = None
+    document_date: datetime
+    amount: Decimal
+    comment: str | None = None
     created_at: datetime
     updated_at: datetime
+    contract: "ContractResponseSchema"
+    warehouse: "WarehouseResponseSchema"
+    organization: "OrganizationResponseSchema"
+    counterparty: "CounterpartyResponseSchema"
+    operation_type: "OperationTypeResponseSchema"
 
     model_config = ConfigDict(from_attributes=True)
 
 class HeldGoodsReceivedNoteSchema(BaseModel):
-    warehouse_id: int
+    pass

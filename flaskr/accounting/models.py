@@ -27,6 +27,7 @@ class ProductMovement(ItemsMixin, db.Model):
 class FinancialOperations(db.Model):
     __tablename__ = 'financial_operations'
 
+    bank_account_company_id: Mapped[int] = mapped_column(ForeignKey('bank_account_company.id'), primary_key=True)
     type_of_operation_id: Mapped[int] = mapped_column(ForeignKey('operation_type.id'), primary_key=True)
     document_id: Mapped[int] = mapped_column(ForeignKey('document.id'), primary_key=True)
     status: Mapped[FinancialOperationsStatus] = mapped_column(Enum(FinancialOperationsStatus))

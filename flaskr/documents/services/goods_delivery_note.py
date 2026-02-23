@@ -18,8 +18,14 @@ from flaskr.documents.services.mixin import DocumentsAllMixin, CreateDocumentIte
 class GoodsDeliveryNoteService(DocumentsAllMixin, CreateDocumentItemMixin, BaseService[GoodsDeliveryNote]):
     model = GoodsDeliveryNote
 
+
+    #TODO При проведенні видаткової накладної при нестачі товару необхідно видавати відповідне попередження
+    # із зазначенням кількості нестачі та не дозволяти проводити документ.
+
+    #TODO Списання собівартості має бути організоване за партіями по методу FIFO.
+
     @classmethod
-    def create(cls, data):
+    def create(cls, data, **kwargs):
         goods_delivery_note = super().create(data, commit=False)
         for item in goods_delivery_note.invoice.items:
             cls._create_document_item(item, goods_delivery_note.id)

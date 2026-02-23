@@ -17,7 +17,7 @@ class GoodsReceivedNoteService(DocumentsAllMixin, BaseService[GoodsReceivedNote]
     @classmethod
     def held(cls, goods_received_note: GoodsReceivedNote, payload):
         goods_received_note.held_date = datetime.now()
-        warehouse_id = payload.get('warehouse_id')
+        warehouse_id = goods_received_note.warehouse.id
         for item in goods_received_note.items:
             ProductMovementService.create(item, warehouse_id, commit=False)
         db.session.commit()
