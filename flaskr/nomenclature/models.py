@@ -20,20 +20,19 @@ class BaseProductService:
     Contains shared attributes like organization_id, counterparty_id, 
     units_of_measurement_id, article, name, and multiplicity.
     """
+
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int| None] = mapped_column(ForeignKey('counterparty.id'), nullable=True)
     units_of_measurement_id: Mapped[int] = mapped_column(ForeignKey('units_of_measurement.id'))
     article: Mapped[int] = mapped_column(Integer)
     name: Mapped[str] = mapped_column(String(50))
     multiplicity: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
-
+    selling_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
 class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'product'
 
     document_products: Mapped[List["DocumentItem"]] = relationship(back_populates="product")
-    purchase_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    selling_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     minimum_stock: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
 
     __table_args__ = (
@@ -48,7 +47,6 @@ class Service(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'service'
 
     document_services: Mapped[List["DocumentItem"]] = relationship(back_populates="service")
-    price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
     __table_args__ = (
         CheckConstraint("multiplicity >= 0", name="ck_service_multiplicity_positive"),

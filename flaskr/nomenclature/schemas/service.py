@@ -17,7 +17,7 @@ class ServiceBaseSchema(BaseModel):
     units_of_measurement_id: int
     article: int
     multiplicity: Decimal = Field(max_digits=10, decimal_places=2, default=Decimal("1.00"))
-    price: Decimal = Field(max_digits=10, decimal_places=2)
+    selling_price: Decimal = Field(max_digits=10, decimal_places=2)
 
 class ServiceCreateSchema(ServiceBaseSchema):
     pass
@@ -30,7 +30,7 @@ class ServiceUpdateSchema(BaseModel):
     units_of_measurement_id: int | None = None
     article: int | None = None
     multiplicity: Decimal = Field(max_digits=10, decimal_places=2, default=None)
-    price: Decimal = Field(max_digits=10, decimal_places=2,default=None)
+    selling_price: Decimal = Field(max_digits=10, decimal_places=2,default=None)
 
 
 class ServiceListSchema(BaseModel):

@@ -1,3 +1,4 @@
+from flask import request, jsonify
 from flaskr.documents.schemas import (
     GoodsDeliveryNoteUpdateSchema,
     GoodsDeliveryNoteResponseSchema,
@@ -49,3 +50,12 @@ class GoodsDeliveryNoteChangeStatusAPI(UpdateAPI):
     service = GoodsDeliveryNoteService
     request_schema = GoodsDeliveryNoteChangeStatusSchema
     response_schema = GoodsDeliveryNoteResponseSchema
+
+    def patch(self, id):
+        payload = request.get_json(silent=False)
+        data = self.validate(payload)
+        try:
+            updated_instance = self.service.change_status(id, data.status.value)
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+        return self.serialize(updated_instance)

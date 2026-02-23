@@ -26,7 +26,8 @@ class ItemsMixin:
     """
 
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    price_per_unit: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    purchase_price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
+    selling_price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
 
     @declared_attr.directive

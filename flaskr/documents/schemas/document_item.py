@@ -26,7 +26,9 @@ class DocumentItemCreateSchema(BaseModel):
 
 
 class DocumentItemUpdateSchema(BaseModel):
-    pass
+    selling_price: int | None = None
+    purchase_price: int | None = None
+    quantity: int | None = None
 
 
 class DocumentItemListSchema(BaseModel):

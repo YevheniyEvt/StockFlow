@@ -1,6 +1,6 @@
 import enum
 
-class ProductMovementStatus(enum.Enum):
+class ProductMovementType(enum.Enum):
     SELLING = "selling"
     PURCHASE = "purchase"
 

@@ -61,5 +61,5 @@ class HeldGodsReceivedNote(MethodView):
     def post(self, id):
         goods_received_note = self.service.get_or_404(id)
         payload = request.get_json(silent=False)
-        self.service.held(goods_received_note, payload)
+        self.service.held_note(goods_received_note, payload)
         return self.response_schema.model_validate(goods_received_note).model_dump(mode='json')

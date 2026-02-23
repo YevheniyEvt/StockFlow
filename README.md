@@ -19,28 +19,6 @@ A robust Flask-based backend application for managing business operations, inclu
 - **Database**: SQLite (default for development)
 - **Environment**: Python 3.12+
 
-### Quick Start
-
-1. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Configure environment**:
-   Create a `config.py` (or use the provided default) and ensure `SQLALCHEMY_DATABASE_URI` is set.
-
-3. **Initialize Database**:
-   The application automatically creates tables on startup:
-   ```python
-   from flaskr import init_app
-   app = init_app()
-   ```
-
-4. **Run the server**:
-   ```bash
-   python ws.py
-   ```
-
 ### API Structure
 The API is organized into several blueprints:
 - `/documents`: Order and document management.
