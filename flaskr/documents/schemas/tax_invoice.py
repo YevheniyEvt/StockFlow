@@ -18,6 +18,7 @@ __all__ = (
 
 class TaxInvoiceCreateSchema(BaseModel):
     counterparty_id: int
+    goods_delivery_note_id: int
 
 
 class TaxInvoiceUpdateSchema(BaseModel):
