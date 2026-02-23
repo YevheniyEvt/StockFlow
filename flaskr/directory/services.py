@@ -18,7 +18,8 @@ __all__ = (
     'CounterpartyService',
     'OperationTypeService',
     'WarehouseService',
-    'UnitsOfMeasurementService'
+    'UnitsOfMeasurementService',
+    'ContractService',
 )
 
 
@@ -44,3 +45,7 @@ class WarehouseService(ServicesAllMixin, BaseService[Warehouse]):
 
 class UnitsOfMeasurementService(ServicesAllMixin, BaseService[UnitsOfMeasurement]):
     model = UnitsOfMeasurement
+
+
+class ContractService(ServicesAllMixin, BaseService[UnitsOfMeasurement]):
+    model = Contract
