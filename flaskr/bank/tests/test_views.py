@@ -41,6 +41,14 @@ def test_currency_detail(client, app):
     assert response.status_code == 200
     assert response.json["name"] == "USD"
 
+def test_currency_update(client, app):
+    org_id, curr_id = setup_org_and_currency(app)
+    response = client.patch(f"/bank/currency/{curr_id}/update", json={
+        "name": "USD_UPDATED"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "USD_UPDATED"
+
 def test_bank_account_company_create(client, app):
     org_id, curr_id = setup_org_and_currency(app)
 
@@ -56,6 +64,16 @@ def test_bank_account_company_create(client, app):
     response = client.post("/bank/bank_account_company/create", json=payload)
     assert response.status_code == 201
     assert response.json["name"] == "Main Account"
+    acc_id = response.json["id"]
+
+    # Update
+    response = client.patch(f"/bank/bank_account_company/{acc_id}/update", json={
+        "name": "Main Account Updated",
+        "checking_account": "999999999"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "Main Account Updated"
+    assert response.json["checking_account"] == "999999999"
 
 def test_bank_account_company_list(client, app):
     org_id, curr_id = setup_org_and_currency(app)
@@ -96,6 +114,16 @@ def test_bank_account_counterparty_create(client, app):
     response = client.post("/bank/bank_account_counterparty/create", json=payload)
     assert response.status_code == 201
     assert response.json["name"] == "CP Account"
+    acc_id = response.json["id"]
+
+    # Update
+    response = client.patch(f"/bank/bank_account_counterparty/{acc_id}/update", json={
+        "name": "CP Account Updated",
+        "bank": "New CP Bank"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "CP Account Updated"
+    assert response.json["bank"] == "New CP Bank"
 
 def test_bank_account_counterparty_list(client, app):
     org_id, curr_id = setup_org_and_currency(app)

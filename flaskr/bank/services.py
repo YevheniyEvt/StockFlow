@@ -12,7 +12,7 @@ __all__ = (
 )
 
 
-class BankAccountCompanyService(BaseService[Order]):
+class BankAccountCompanyService(BaseService[BankAccountCompany]):
     model = BankAccountCompany
 
     @classmethod
@@ -21,7 +21,7 @@ class BankAccountCompanyService(BaseService[Order]):
         return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
 
 
-class BankAccountCounterpartyService(BaseService[Order]):
+class BankAccountCounterpartyService(BaseService[BankAccountCounterparty]):
     model = BankAccountCounterparty
 
     @classmethod
@@ -30,7 +30,7 @@ class BankAccountCounterpartyService(BaseService[Order]):
         return db.session.scalars(select(cls.model).where(cls.model.counterparty_id == counterparty_id)).all()
 
 
-class CurrencyService(BaseService[Order]):
+class CurrencyService(BaseService[Currency]):
     model = Currency
 
     @classmethod

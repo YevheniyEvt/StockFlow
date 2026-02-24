@@ -28,6 +28,16 @@ def test_product_create(client, app):
     assert response.status_code == 201
     assert response.json["name"] == "Widget"
     assert float(response.json["selling_price"]) == 19.99
+    prod_id = response.json["id"]
+
+    # Update
+    response = client.patch(f"/nomenclature/products/{prod_id}/update", json={
+        "name": "Widget Updated",
+        "selling_price": "24.50"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "Widget Updated"
+    assert float(response.json["selling_price"]) == 24.50
 
 def test_product_list(client, app):
     org_id, uom_id = setup_org_and_uom(app)
@@ -68,3 +78,12 @@ def test_service_views(client, app):
     response = client.get(f"/nomenclature/services/{service_id}")
     assert response.status_code == 200
     assert response.json["name"] == "Repair"
+
+    # Update
+    response = client.patch(f"/nomenclature/services/{service_id}/update", json={
+        "name": "Repair Updated",
+        "selling_price": "75.00"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "Repair Updated"
+    assert float(response.json["selling_price"]) == 75.00

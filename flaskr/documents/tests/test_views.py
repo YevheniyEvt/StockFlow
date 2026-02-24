@@ -51,6 +51,15 @@ def test_order_views(client, app):
     assert response.status_code == 201
     order_id = response.json["id"]
 
+    # Update
+    response = client.patch(f"/documents/orders/{order_id}/update", json={
+        "comment": "New Comment",
+        "warehouse_id": entities["wh_id"]
+    })
+    assert response.status_code == 200
+    assert response.json["comment"] == "New Comment"
+    assert response.json["warehouse_id"] == entities["wh_id"]
+
     # List
     response = client.get("/documents/orders", json={"organization_id": entities["org_id"]})
     assert response.status_code == 200
@@ -88,6 +97,15 @@ def test_invoice_views(client, app):
     assert response.status_code == 201
     invoice_id = response.json["id"]
 
+    # Update
+    response = client.patch(f"/documents/invoices/{invoice_id}/update", json={
+        "comment": "Invoice Comment",
+        "warehouse_id": entities["wh_id"]
+    })
+    assert response.status_code == 200
+    assert response.json["comment"] == "Invoice Comment"
+    assert response.json["warehouse_id"] == entities["wh_id"]
+
     # List
     response = client.get("/documents/invoices", json={"organization_id": entities["org_id"]})
     assert response.status_code == 200
@@ -106,6 +124,15 @@ def test_goods_received_note_views(client, app):
     })
     assert response.status_code == 201
     grn_id = response.json["id"]
+
+    # Update
+    response = client.patch(f"/documents/goods_received_notes/{grn_id}/update", json={
+        "comment": "GRN Comment",
+        "warehouse_id": entities["wh_id"]
+    })
+    assert response.status_code == 200
+    assert response.json["comment"] == "GRN Comment"
+    assert response.json["warehouse_id"] == entities["wh_id"]
 
     # List
     response = client.get("/documents/goods_received_notes", json={"organization_id": entities["org_id"]})
@@ -181,6 +208,15 @@ def test_goods_delivery_note_views(client, app):
     })
     assert response.status_code == 201
     gdn_id = response.json["id"]
+
+    # Update
+    response = client.patch(f"/documents/goods_delivery_notes/{gdn_id}/update", json={
+        "comment": "GDN Comment",
+        "warehouse_id": entities["wh_id"]
+    })
+    assert response.status_code == 200
+    assert response.json["comment"] == "GDN Comment"
+    assert response.json["warehouse_id"] == entities["wh_id"]
 
     # List
     response = client.get("/documents/goods_delivery_notes", json={"organization_id": entities["org_id"]})
@@ -281,6 +317,13 @@ def test_tax_invoice_views(client, app):
     response = client.get("/documents/tax_invoices", json={"organization_id": entities["org_id"]})
     assert response.status_code == 200
     assert any(item["id"] == ti_id for item in response.json)
+
+    # Update
+    response = client.patch(f"/documents/tax_invoices/{ti_id}/update", json={
+        "comment": "TI Comment"
+    })
+    assert response.status_code == 200
+    assert response.json["comment"] == "TI Comment"
 
 def test_document_item_create(client, app):
     entities = setup_all_entities(app)

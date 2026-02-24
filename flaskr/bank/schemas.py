@@ -39,6 +39,7 @@ class BankAccountCompanyListSchema(BaseModel):
 
 
 class BankAccountCompanyResponseSchema(BaseSchema):
+    id: int
     organization_id: int
     created_at: datetime
     updated_at: datetime
@@ -59,6 +60,7 @@ class BankAccountCounterpartyListSchema(BaseModel):
 
 
 class BankAccountCounterpartyResponseSchema(BaseSchema):
+    id: int
     counterparty_id: int
     created_at: datetime
     updated_at: datetime
@@ -80,6 +82,7 @@ class CurrencyListSchema(BaseModel):
 
 
 class CurrencyResponseSchema(BaseModel):
+    id: int
     organization_id: int
     name: str
     created_at: datetime

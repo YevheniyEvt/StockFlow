@@ -33,6 +33,16 @@ def test_organization_detail(client, app):
     assert response.status_code == 200
     assert response.json["name"] == "Test Org"
 
+def test_organization_update(client, app):
+    org_id = setup_org(app)
+    response = client.patch(f"/directory/organizations/{org_id}/update", json={
+        "name": "Updated Org Name",
+        "address": "456 Updated St"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "Updated Org Name"
+    assert response.json["address"] == "456 Updated St"
+
 def test_counterparty_views(client, app):
     org_id = setup_org(app)
     # Create
@@ -55,6 +65,15 @@ def test_counterparty_views(client, app):
     assert response.status_code == 200
     assert response.json["name"] == "CP1"
 
+    # Update
+    response = client.patch(f"/directory/counterparts/{cp_id}/update", json={
+        "name": "CP1 Updated",
+        "address": "CP Address Updated"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "CP1 Updated"
+    assert response.json["address"] == "CP Address Updated"
+
 def test_warehouse_views(client, app):
     org_id = setup_org(app)
     # Create
@@ -72,6 +91,15 @@ def test_warehouse_views(client, app):
     assert response.status_code == 200
     assert any(item["name"] == "WH1" for item in response.json)
 
+    # Update
+    response = client.patch(f"/directory/warehouses/{wh_id}/update", json={
+        "name": "WH1 Updated",
+        "address": "WH Address Updated"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "WH1 Updated"
+    assert response.json["address"] == "WH Address Updated"
+
 def test_operation_type_views(client, app):
     org_id = setup_org(app)
     # Create
@@ -87,6 +115,13 @@ def test_operation_type_views(client, app):
     response = client.get("/directory/operation_types", json={"organization_id": org_id})
     assert response.status_code == 200
     assert any(item["name"] == "OP1" for item in response.json)
+
+    # Update
+    response = client.patch(f"/directory/operation_types/{op_id}/update", json={
+        "name": "OP1 Updated"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "OP1 Updated"
 
 def test_uom_views(client, app):
     org_id = setup_org(app)
@@ -104,6 +139,13 @@ def test_uom_views(client, app):
     assert response.status_code == 200
     assert any(item["name"] == "pcs" for item in response.json)
 
+    # Update
+    response = client.patch(f"/directory/units_of_measurements/{uom_id}/update", json={
+        "name": "kg"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "kg"
+
 def test_contract_views(client, app):
     org_id = setup_org(app)
     # Create
@@ -119,3 +161,10 @@ def test_contract_views(client, app):
     response = client.get("/directory/contracts", json={"organization_id": org_id})
     assert response.status_code == 200
     assert any(item["name"] == "Contract 1" for item in response.json)
+
+    # Update
+    response = client.patch(f"/directory/contracts/{contract_id}/update", json={
+        "name": "Contract 1 Updated"
+    })
+    assert response.status_code == 200
+    assert response.json["name"] == "Contract 1 Updated"
