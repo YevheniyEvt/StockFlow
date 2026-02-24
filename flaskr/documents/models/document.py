@@ -25,26 +25,31 @@ __all__ = (
     'TaxInvoice',
 )
 
+class BaseDocument:
+    @declared_attr
+    def operation_type_id(cls) -> Mapped[int | None]:
+        return mapped_column(ForeignKey('operation_type.id'))
 
-class Document(CreatedUpdatedDateTimeMixin, db.Model):
-    __tablename__ = 'document'
+    @declared_attr
+    def contract_id(cls) -> Mapped[int]:
+        return mapped_column(ForeignKey('contract.id'))
 
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
-    counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
-    operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
-    contract_id: Mapped[int] = mapped_column(ForeignKey('contract.id'))
-    warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'))
+    @declared_attr
+    def warehouse_id(cls) -> Mapped[int]:
+        return mapped_column(ForeignKey('warehouse.id'))
 
-    items: Mapped[List["DocumentItem"]] = relationship(back_populates="document", cascade="all, delete-orphan")
 
-    document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
-    amount: Mapped[Decimal] = mapped_column(Numeric(10,2))
-    comment: Mapped[str | None] = mapped_column(String(50))
-    document_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    @declared_attr
+    def amount(cls) -> Mapped[Decimal]:
+        return mapped_column(Numeric(10, 2))
 
-    __mapper_args__ = {
-        "polymorphic_on": document_type,
-    }
+    @declared_attr
+    def comment(cls) -> Mapped[str | None]:
+        return mapped_column(String(50))
+
+    @declared_attr
+    def document_date(cls) -> Mapped[datetime]:
+        return mapped_column(DateTime, default=datetime.now)
 
     @declared_attr.directive
     def __table_args__(cls):
@@ -56,7 +61,21 @@ class Document(CreatedUpdatedDateTimeMixin, db.Model):
         )
 
 
-class GoodsReceivedNote(Document):
+class Document(CreatedUpdatedDateTimeMixin, db.Model):
+    __tablename__ = 'document'
+
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
+    counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
+    document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
+
+    items: Mapped[List["DocumentItem"]] = relationship("DocumentItem", back_populates="document", cascade="all, delete-orphan")
+
+    __mapper_args__ = {
+        "polymorphic_on": document_type,
+    }
+
+
+class GoodsReceivedNote(BaseDocument, Document):
     __tablename__ = 'goods_received_note'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
@@ -72,7 +91,7 @@ class GoodsReceivedNote(Document):
 
 
 
-class Order(Document):
+class Order(BaseDocument, Document):
     __tablename__ = 'order'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
@@ -90,7 +109,7 @@ class Order(Document):
     }
 
 
-class Invoice(Document):
+class Invoice(BaseDocument, Document):
     __tablename__ = 'invoice'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
@@ -122,7 +141,7 @@ class Invoice(Document):
         )
 
 
-class GoodsDeliveryNote(Document):
+class GoodsDeliveryNote(BaseDocument, Document):
     __tablename__ = 'goods_delivery_note'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)
@@ -145,7 +164,7 @@ class GoodsDeliveryNote(Document):
     }
 
 
-class TaxInvoice(Document):
+class TaxInvoice(BaseDocument, Document):
     __tablename__ = 'tax_invoice'
 
     id = mapped_column(ForeignKey("document.id"), primary_key=True)

@@ -38,7 +38,6 @@ class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __table_args__ = (
         CheckConstraint("multiplicity >= 0", name="ck_product_multiplicity_positive"),
         CheckConstraint("article >= 0", name="ck_product_article_positive"),
-        CheckConstraint("purchase_price >= 0", name="ck_product_purchase_price_positive"),
         CheckConstraint("selling_price >= 0", name="ck_product_selling_price_positive"),
         CheckConstraint("minimum_stock >= 0", name="ck_product_minimum_stock_positive"),
     )
@@ -51,5 +50,5 @@ class Service(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __table_args__ = (
         CheckConstraint("multiplicity >= 0", name="ck_service_multiplicity_positive"),
         CheckConstraint("article >= 0", name="ck_service_article_positive"),
-        CheckConstraint("price >= 0", name="ck_service_price_positive"),
+        CheckConstraint("selling_price >= 0", name="ck_service_price_positive"),
     )
