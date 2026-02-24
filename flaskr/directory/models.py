@@ -12,6 +12,7 @@ __all__ = (
     'Warehouse',
     'OperationType',
     'UnitsOfMeasurement',
+    'Contract',
 )
 
 

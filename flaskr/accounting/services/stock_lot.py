@@ -1,8 +1,8 @@
 from sqlalchemy import select
 
-from flaskr import db, ProductMovement
+from flaskr import db
 from flaskr.accounting.accounting_enum import ProductMovementType
-from flaskr.accounting.models import ProductStockLot, ServiceStockLot
+from flaskr.accounting.models import ProductStockLot, ServiceStockLot, ProductMovement
 
 
 __all__ = (

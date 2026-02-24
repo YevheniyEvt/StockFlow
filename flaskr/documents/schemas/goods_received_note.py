@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
 
-from flaskr import OperationType
+from flaskr.directory.schemas import OperationTypeResponseSchema
 from flaskr.documents.models.document_enum import GoodsReceivedNoteStatus
 
 __all__ = (
@@ -26,7 +26,7 @@ class GoodsReceivedNoteUpdateSchema(BaseModel):
     contract_id: int | None = None
     comment: str | None = None
     document_date: datetime | None = None
-    operation_type: OperationType | None = None
+    operation_type: OperationTypeResponseSchema | None = None
 
 
 class GoodsReceivedNoteChangeStatusSchema(BaseModel):

@@ -11,6 +11,7 @@ from flaskr.directory.models import (
     Organization,
     Warehouse,
     UnitsOfMeasurement,
+    Contract,
 )
 
 __all__ = (

@@ -1,7 +1,7 @@
-from flaskr import db, ProductMovement
+from flaskr import db
 from flaskr.accounting.accounting_enum import ProductMovementType
-from flaskr.accounting.models import ServiceMovement
-from flaskr.accounting.services import ProductStockLotService, ServiceStockLotService
+from flaskr.accounting.models import ServiceMovement, ProductMovement
+from flaskr.accounting.services.stock_lot import ProductStockLotService
 
 __all__ = (
     'ProductMovementService',

@@ -26,7 +26,6 @@ def init_app():
     with app.app_context():
         db.create_all()
         # Import parts of our application
-        from .accounting import urls
         from .directory import urls
         from .documents import urls
         from .nomenclature import urls
@@ -34,7 +33,6 @@ def init_app():
         from .reports import urls
 
         # Register Blueprints
-        app.register_blueprint(accounting.accounting_bp)
         app.register_blueprint(directory.directory_bp)
         app.register_blueprint(documents.documents_bp)
         app.register_blueprint(nomenclature.nomenclature_bp)
