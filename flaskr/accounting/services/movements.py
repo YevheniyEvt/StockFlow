@@ -47,10 +47,11 @@ class ProductMovementService:
             document_id=item.document_id,
             movement_type=ProductMovementType.PURCHASE,
             quantity=item.quantity,
-            purchase_price=item.purchase_price,
+            price=item.purchase_price,
             amount=item.amount,
         )
         db.session.add(product_movement)
+        db.session.flush()
         ProductStockLotService.set_on_stock(product_movement, commit=False)
         if commit:
             db.session.commit()
@@ -80,7 +81,7 @@ class ServiceMovementService:
             document_id=item.document_id,
             movement_type=ProductMovementType.PURCHASE,
             quantity=item.quantity,
-            purchase_price=item.purchase_price,
+            price=item.purchase_price,
             amount=item.amount,
         )
         db.session.add(product_movement)

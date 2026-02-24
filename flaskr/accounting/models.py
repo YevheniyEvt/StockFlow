@@ -17,28 +17,27 @@ __all__ = (
 )
 
 class BaseMovement:
-    document_id: Mapped[int] = mapped_column(ForeignKey('document.id'), primary_key=True)
-    warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'), primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey('document.id'))
+    warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'))
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     movement_type: Mapped[ProductMovementType]  = mapped_column(Enum(ProductMovementType))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
 
 class ProductMovement(BaseMovement, db.Model):
     __tablename__ = 'product_movement'
-    product_id: Mapped[int | None] = mapped_column(ForeignKey('product.id'), primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey('product.id'))
 
 
 class ServiceMovement(BaseMovement, db.Model):
     __tablename__ = 'service_movement'
-    service_id: Mapped[int] = mapped_column(ForeignKey('service.id'), primary_key=True)
+    service_id: Mapped[int] = mapped_column(ForeignKey('service.id'))
 
 
 class BaseStockLot:
     warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'))
-    product_movement_id: Mapped[int] = mapped_column(ForeignKey('product_movement.id'))
     quantity_total: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
     quantity_remaining: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
     purchase_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
@@ -47,19 +46,20 @@ class BaseStockLot:
 class ProductStockLot(BaseStockLot, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'product_stock_lot'
     product_id: Mapped[int] = mapped_column(ForeignKey('product.id'))
+    product_movement_id: Mapped[int] = mapped_column(ForeignKey('product_movement.id'))
 
 
 class ServiceStockLot(BaseStockLot, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'service_stock_lot'
     service_id: Mapped[int] = mapped_column(ForeignKey('service.id'))
-
+    service_movement_id: Mapped[int] = mapped_column(ForeignKey('service_movement.id'))
 
 class FinancialOperations(db.Model):
     __tablename__ = 'financial_operations'
 
-    bank_account_company_id: Mapped[int] = mapped_column(ForeignKey('bank_account_company.id'), primary_key=True)
-    type_of_operation_id: Mapped[int] = mapped_column(ForeignKey('operation_type.id'), primary_key=True)
-    document_id: Mapped[int] = mapped_column(ForeignKey('document.id'), primary_key=True)
+    bank_account_company_id: Mapped[int] = mapped_column(ForeignKey('bank_account_company.id'))
+    type_of_operation_id: Mapped[int] = mapped_column(ForeignKey('operation_type.id'))
+    document_id: Mapped[int] = mapped_column(ForeignKey('document.id'))
     status: Mapped[FinancialOperationsStatus] = mapped_column(Enum(FinancialOperationsStatus))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    date: Mapped[datetime] = mapped_column(default=datetime.now())
+    date: Mapped[datetime] = mapped_column(default=datetime.now)

@@ -54,6 +54,7 @@ class GoodsReceivedNoteResponseSchema(BaseModel):
     organization_id: int
     counterparty_id: int
     operation_type_id: int | None
+    comment: str | None
     items: List[DocumentItemResponseSchema] | None = None
 
     model_config = ConfigDict(from_attributes=True)

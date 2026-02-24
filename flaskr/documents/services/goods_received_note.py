@@ -16,7 +16,7 @@ class GoodsReceivedNoteService(DocumentsAllMixin, BaseService[GoodsReceivedNote]
     model = GoodsReceivedNote
 
     @classmethod
-    def held_note(cls, goods_received_note: GoodsReceivedNote, payload):
+    def held_note(cls, goods_received_note: GoodsReceivedNote):
         goods_received_note.held_date = datetime.now()
         goods_received_note.status = GoodsReceivedNoteStatus.HELD
         db.session.add(goods_received_note)

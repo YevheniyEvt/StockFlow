@@ -112,6 +112,43 @@ def test_goods_received_note_views(client, app):
     assert response.status_code == 200
     assert any(item["id"] == grn_id for item in response.json)
 
+def test_held_goods_received_note(client, app):
+    entities = setup_all_entities(app)
+    # Create GRN
+    response = client.post("/documents/goods_received_notes/create", json={
+        "organization_id": entities["org_id"],
+        "counterparty_id": entities["cp_id"],
+    })
+    grn_id = response.json["id"]
+    
+    # Update GRN to add warehouse_id (required for movements)
+    client.patch(f"/documents/goods_received_notes/{grn_id}/update", json={
+        "warehouse_id": entities["wh_id"]
+    })
+
+    # Add item
+    client.post("/documents/document_item/create", json={
+        "document_id": grn_id,
+        "product_id": entities["prod_id"],
+        "quantity": 10
+    })
+
+    # Held GRN
+    response = client.post(f"/documents/goods_received_notes/{grn_id}/held", json={})
+    assert response.status_code == 200
+    assert response.json["status"] == "held"
+    
+    # Verify movement and stock
+    from flaskr.accounting.models import ProductMovement, ProductStockLot
+    with app.app_context():
+        movement = db.session.scalar(db.select(ProductMovement).where(ProductMovement.document_id == grn_id))
+        assert movement is not None
+        assert float(movement.quantity) == 10.0
+        
+        lot = db.session.scalar(db.select(ProductStockLot).where(ProductStockLot.product_id == entities["prod_id"]))
+        assert lot is not None
+        assert float(lot.quantity_remaining) == 10.0
+
 def test_goods_delivery_note_views(client, app):
     entities = setup_all_entities(app)
     with app.app_context():
@@ -149,6 +186,56 @@ def test_goods_delivery_note_views(client, app):
     response = client.get("/documents/goods_delivery_notes", json={"organization_id": entities["org_id"]})
     assert response.status_code == 200
     assert any(item["id"] == gdn_id for item in response.json)
+
+def test_goods_delivery_note_change_status(client, app):
+    entities = setup_all_entities(app)
+    # 1. Provide stock via GRN
+    grn_res = client.post("/documents/goods_received_notes/create", json={
+        "organization_id": entities["org_id"], "counterparty_id": entities["cp_id"]
+    })
+    grn_id = grn_res.json["id"]
+    client.patch(f"/documents/goods_received_notes/{grn_id}/update", json={
+        "warehouse_id": entities["wh_id"]
+    })
+    client.post("/documents/document_item/create", json={
+        "document_id": grn_id, "product_id": entities["prod_id"], "quantity": 20
+    })
+    client.post(f"/documents/goods_received_notes/{grn_id}/held", json={})
+
+    # 2. Create Order -> Invoice -> GDN
+    order_res = client.post("/documents/orders/create", json={
+        "organization_id": entities["org_id"], "counterparty_id": entities["cp_id"]
+    })
+    order_id = order_res.json["id"]
+    client.patch(f"/documents/orders/{order_id}/update", json={
+        "warehouse_id": entities["wh_id"]
+    })
+    client.post("/documents/document_item/create", json={
+        "document_id": order_id, "product_id": entities["prod_id"], "quantity": 5
+    })
+    
+    inv_res = client.post("/documents/invoices/create", json={
+        "organization_id": entities["org_id"], "counterparty_id": entities["cp_id"], "order_id": order_id
+    })
+    invoice_id = inv_res.json["id"]
+    
+    gdn_res = client.post("/documents/goods_delivery_notes/create", json={
+        "organization_id": entities["org_id"], "counterparty_id": entities["cp_id"], "invoice_id": invoice_id
+    })
+    gdn_id = gdn_res.json["id"]
+    client.patch(f"/documents/goods_delivery_notes/{gdn_id}/update", json={"warehouse_id": entities["wh_id"]})
+
+    # 3. Change status to HELD (triggers selling movement)
+    response = client.patch(f"/documents/goods_delivery_notes/{gdn_id}/update-status", json={"status": "held"})
+    assert response.status_code == 200
+    assert response.json["status"] == "held"
+
+    # 4. Verify stock
+    from flaskr.accounting.models import ProductStockLot
+    with app.app_context():
+        lot = db.session.scalar(db.select(ProductStockLot).where(ProductStockLot.product_id == entities["prod_id"]))
+        # Original 20, sold 5 -> remaining 15
+        assert float(lot.quantity_remaining) == 15.0
 
 def test_tax_invoice_views(client, app):
     entities = setup_all_entities(app)

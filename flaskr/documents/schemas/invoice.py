@@ -26,6 +26,7 @@ class InvoiceUpdateSchema(BaseModel):
     operation_type_id: int | None = None
     warehouse_id: int | None = None
     contract_id: int | None = None
+    comment: str | None = None
 
 
 class InvoiceChangeStatusSchema(BaseModel):
@@ -48,5 +49,6 @@ class InvoiceResponseSchema(BaseModel):
     warehouse_id: int | None
     contract_id: int | None
     amount: float | None
+    comment: str | None
 
     model_config = ConfigDict(from_attributes=True)

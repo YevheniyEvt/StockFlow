@@ -25,6 +25,7 @@ class OrderUpdateSchema(BaseModel):
     operation_type_id: int | None = None
     warehouse_id: int | None = None
     contract_id: int | None = None
+    comment: str | None = None
 
 class OrderChangeStatusSchema(BaseModel):
     status: OrderStatus
@@ -45,6 +46,7 @@ class OrderResponseSchema(BaseModel):
     warehouse_id: int | None
     contract_id: int | None
     amount: float | None
+    comment: str | None
     created_at: datetime
     updated_at: datetime
 

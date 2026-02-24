@@ -6,6 +6,7 @@ from flaskr.documents.views import (
     GoodsReceivedNoteUpdateAPI,
     GoodsReceivedNoteChangeStatusAPI,
     GoodsReceivedNoteCreateAPI,
+    HeldGodsReceivedNote,
 )
 
 documents_bp.add_url_rule(
@@ -31,6 +32,11 @@ documents_bp.add_url_rule(
 documents_bp.add_url_rule(
     "/goods_received_notes/<int:id>/update-status",
     view_func=GoodsReceivedNoteChangeStatusAPI.as_view("goods_received_note_update_status"), methods=['PATCH']
+)
+
+documents_bp.add_url_rule(
+    "/goods_received_notes/<int:id>/held",
+    view_func=HeldGodsReceivedNote.as_view("goods_received_note_held"), methods=['POST']
 )
 
 

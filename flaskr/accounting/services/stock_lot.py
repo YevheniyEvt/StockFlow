@@ -26,7 +26,7 @@ class ProductStockLotService:
             product_movement_id=product_movement.id,
             quantity_total=product_movement.quantity,
             quantity_remaining=product_movement.quantity,
-            purchase_price=product_movement.purchase_price,
+            purchase_price=product_movement.price,
         )
         db.session.add(stock)
         if commit:

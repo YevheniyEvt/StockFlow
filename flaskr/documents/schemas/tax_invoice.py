@@ -26,7 +26,7 @@ class TaxInvoiceUpdateSchema(BaseModel):
     operation_type_id: int | None = None
     warehouse_id: int | None = None
     contract_id: int | None = None
-    amount: float = 0
+    comment: str | None = None
 
 
 class TaxInvoiceChangeStatusSchema(BaseModel):
@@ -46,6 +46,7 @@ class TaxInvoiceResponseSchema(BaseModel):
     contract_id: int | None
     amount: float | None
     items: List[DocumentItemResponseSchema] | None = None
+    comment: str | None
     created_at: datetime
     updated_at: datetime
 

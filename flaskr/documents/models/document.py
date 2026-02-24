@@ -26,30 +26,13 @@ __all__ = (
 )
 
 class BaseDocument:
-    @declared_attr
-    def operation_type_id(cls) -> Mapped[int | None]:
-        return mapped_column(ForeignKey('operation_type.id'))
+    operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
+    contract_id: Mapped[int | None] = mapped_column(ForeignKey('contract.id'))
+    warehouse_id: Mapped[int | None] = mapped_column(ForeignKey('warehouse.id'))
 
-    @declared_attr
-    def contract_id(cls) -> Mapped[int | None]:
-        return mapped_column(ForeignKey('contract.id'))
-
-    @declared_attr
-    def warehouse_id(cls) -> Mapped[int | None]:
-        return mapped_column(ForeignKey('warehouse.id'))
-
-
-    @declared_attr
-    def amount(cls) -> Mapped[Decimal | None]:
-        return mapped_column(Numeric(10, 2))
-
-    @declared_attr
-    def comment(cls) -> Mapped[str | None]:
-        return mapped_column(String(50))
-
-    @declared_attr
-    def document_date(cls) -> Mapped[datetime]:
-        return mapped_column(DateTime, default=datetime.now)
+    amount: Mapped[Decimal | None] = mapped_column(Numeric(10,2))
+    comment: Mapped[str | None] = mapped_column(String(50))
+    document_date: Mapped[datetime | None] = mapped_column(DateTime, default=datetime.now)
 
     @declared_attr.directive
     def __table_args__(cls):
@@ -88,7 +71,6 @@ class GoodsReceivedNote(BaseDocument, Document):
     __mapper_args__ = {
         "polymorphic_identity": DocumentType.GOODS_RECEIVED_NOTE,
     }
-
 
 
 class Order(BaseDocument, Document):

@@ -26,7 +26,8 @@ class CreateDocumentItemMixin:
             product_id=item.product_id,
             service_id=item.service_id,
             quantity=item.quantity,
-            price_per_unit=item.price_per_unit,
+            selling_price=getattr(item, 'selling_price', None),
+            purchase_price=getattr(item, 'purchase_price', None),
             amount=item.amount,
         )
         db.session.add(document_item)

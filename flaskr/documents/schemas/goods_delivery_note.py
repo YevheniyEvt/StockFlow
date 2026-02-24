@@ -23,12 +23,13 @@ class GoodsDeliveryNoteCreateSchema(BaseModel):
 
 
 class GoodsDeliveryNoteUpdateSchema(BaseModel):
-    organization_id: int | None
-    counterparty_id: int | None
-    operation_type_id: int | None
-    warehouse_id: int | None
-    contract_id: int | None
-    invoice_id: int | None
+    organization_id: int | None = None
+    counterparty_id: int | None = None
+    operation_type_id: int | None = None
+    warehouse_id: int | None = None
+    contract_id: int | None = None
+    invoice_id: int | None = None
+    comment: str | None = None
 
 
 class GoodsDeliveryNoteChangeStatusSchema(BaseModel):
@@ -50,6 +51,7 @@ class GoodsDeliveryNoteResponseSchema(BaseModel):
     contract_id: int | None
     invoice_id: int | None
     amount: float | None
+    comment: str | None
     created_at: datetime
     updated_at: datetime
     items: List[DocumentItemResponseSchema] | None = None
