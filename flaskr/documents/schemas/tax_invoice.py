@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
-from flaskr import DocumentItem
+from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
 from flaskr.documents.models.document_enum import TaxInvoiceStatus
 
 
@@ -17,12 +17,16 @@ __all__ = (
 
 
 class TaxInvoiceCreateSchema(BaseModel):
+    organization_id: int
     counterparty_id: int
     goods_delivery_note_id: int
 
 
 class TaxInvoiceUpdateSchema(BaseModel):
-    pass
+    operation_type_id: int | None = None
+    warehouse_id: int | None = None
+    contract_id: int | None = None
+    amount: float = 0
 
 
 class TaxInvoiceChangeStatusSchema(BaseModel):
@@ -37,7 +41,11 @@ class TaxInvoiceListSchema(BaseModel):
 class TaxInvoiceResponseSchema(BaseModel):
     id: int
     status: TaxInvoiceStatus
-    # items: List[DocumentItem] | None = None
+    operation_type_id: int | None
+    warehouse_id: int | None
+    contract_id: int | None
+    amount: float | None
+    items: List[DocumentItemResponseSchema] | None = None
     created_at: datetime
     updated_at: datetime
 

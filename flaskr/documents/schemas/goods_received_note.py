@@ -1,10 +1,12 @@
 from datetime import datetime
-from decimal import Decimal
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
 from flaskr.directory.schemas import OperationTypeResponseSchema
 from flaskr.documents.models.document_enum import GoodsReceivedNoteStatus
+from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
+
 
 __all__ = (
     'GoodsReceivedNoteUpdateSchema',
@@ -16,6 +18,7 @@ __all__ = (
 
 
 class GoodsReceivedNoteCreateSchema(BaseModel):
+    organization_id: int
     counterparty_id: int
 
 
@@ -42,15 +45,16 @@ class GoodsReceivedNoteResponseSchema(BaseModel):
     id: int
     status: GoodsReceivedNoteStatus
     document_date: datetime
-    amount: Decimal
-    comment: str | None = None
+    amount: float | None
+    comment: str | None
     created_at: datetime
     updated_at: datetime
-    contract: "ContractResponseSchema"
-    warehouse: "WarehouseResponseSchema"
-    organization: "OrganizationResponseSchema"
-    counterparty: "CounterpartyResponseSchema"
-    operation_type: "OperationTypeResponseSchema"
+    contract_id: int | None
+    warehouse_id: int | None
+    organization_id: int
+    counterparty_id: int
+    operation_type_id: int | None
+    items: List[DocumentItemResponseSchema] | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

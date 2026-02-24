@@ -12,6 +12,7 @@ __all__ = (
 class ContractCreateSchema(BaseModel):
     name: str
     organization_id: int
+    additional_data: str
 
 
 class ContractUpdateSchema(BaseModel):
@@ -26,6 +27,7 @@ class ContractListSchema(BaseModel):
 class ContractResponseSchema(BaseModel):
     id: int
     name: str
+    additional_data: str
     created_at: datetime
     updated_at: datetime
 

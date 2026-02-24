@@ -44,6 +44,8 @@ class BaseApi(Generic[RequestSchema, ResponseSchema, ServiceType], abc.ABC):
         return [self.serialize(item) for item in items]
 
     def validate(self, payload: dict):
+        if self.request_schema is None:
+            return None
         return self.request_schema.model_validate(payload)
 
 
@@ -57,7 +59,7 @@ class ListAPI(BaseApi, MethodView):
     _required_attributes = ('service', 'request_schema', 'response_schema')
 
     def get(self):
-        payload = request.get_json(silent=False)
+        payload = request.get_json(silent=True) or {}
         data = self.validate(payload)
         items = self.service.all(data)
         return self.serialize_many(items)

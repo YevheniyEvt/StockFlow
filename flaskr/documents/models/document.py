@@ -31,16 +31,16 @@ class BaseDocument:
         return mapped_column(ForeignKey('operation_type.id'))
 
     @declared_attr
-    def contract_id(cls) -> Mapped[int]:
+    def contract_id(cls) -> Mapped[int | None]:
         return mapped_column(ForeignKey('contract.id'))
 
     @declared_attr
-    def warehouse_id(cls) -> Mapped[int]:
+    def warehouse_id(cls) -> Mapped[int | None]:
         return mapped_column(ForeignKey('warehouse.id'))
 
 
     @declared_attr
-    def amount(cls) -> Mapped[Decimal]:
+    def amount(cls) -> Mapped[Decimal | None]:
         return mapped_column(Numeric(10, 2))
 
     @declared_attr

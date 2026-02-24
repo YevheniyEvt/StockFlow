@@ -15,22 +15,25 @@ __all__ = (
 class BankAccountCompanyService(BaseService[Order]):
     model = BankAccountCompany
 
-    def all(self, data) -> List[BankAccountCompany]:
+    @classmethod
+    def all(cls, data) -> List[BankAccountCompany]:
         organization_id = data.organization_id
-        return db.session.scalars(select(self.model).where(self.model.organization_id == organization_id)).all()
+        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
 
 
 class BankAccountCounterpartyService(BaseService[Order]):
     model = BankAccountCounterparty
 
-    def all(self, data) -> List[BankAccountCounterparty]:
+    @classmethod
+    def all(cls, data) -> List[BankAccountCounterparty]:
         counterparty_id = data.counterparty_id
-        return db.session.scalars(select(self.model).where(self.model.counterparty_id == counterparty_id)).all()
+        return db.session.scalars(select(cls.model).where(cls.model.counterparty_id == counterparty_id)).all()
 
 
 class CurrencyService(BaseService[Order]):
     model = Currency
 
-    def all(self, data) -> List[Currency]:
+    @classmethod
+    def all(cls, data) -> List[Currency]:
         organization_id = data.organization_id
-        return db.session.scalars(select(self.model).where(self.model.organization_id == organization_id)).all()
+        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()

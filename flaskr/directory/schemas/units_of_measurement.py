@@ -12,6 +12,7 @@ __all__ = (
 class UnitsOfMeasurementCreateSchema(BaseModel):
     name: str
     organization_id: int
+    additional_data: str
 
 
 class UnitsOfMeasurementUpdateSchema(BaseModel):
@@ -26,6 +27,7 @@ class UnitsOfMeasurementListSchema(BaseModel):
 class UnitsOfMeasurementResponseSchema(BaseModel):
     id: int
     name: str
+    additional_data: str
     created_at: datetime
     updated_at: datetime
 

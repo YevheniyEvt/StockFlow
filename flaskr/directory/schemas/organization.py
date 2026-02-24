@@ -11,6 +11,7 @@ __all__ = (
 class OrganizationCreateSchema(BaseModel):
     name: str
     address: str | None = None
+    additional_data: str
 
 
 class OrganizationUpdateSchema(BaseModel):
@@ -21,7 +22,7 @@ class OrganizationUpdateSchema(BaseModel):
 class OrganizationResponseSchema(BaseModel):
     id: int
     name: str
-    address: str
+    address: str | None = None
     created_at: datetime
     updated_at: datetime | None
 

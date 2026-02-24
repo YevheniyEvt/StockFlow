@@ -3,8 +3,9 @@ from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
-from flaskr import DocumentItem
 from flaskr.documents.models.document_enum import GoodsDeliveryNoteStatus
+from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
+
 
 __all__ = (
     'GoodsDeliveryNoteUpdateSchema',
@@ -16,12 +17,18 @@ __all__ = (
 
 
 class GoodsDeliveryNoteCreateSchema(BaseModel):
+    organization_id: int
     counterparty_id: int
     invoice_id: int
 
 
 class GoodsDeliveryNoteUpdateSchema(BaseModel):
-    pass
+    organization_id: int | None
+    counterparty_id: int | None
+    operation_type_id: int | None
+    warehouse_id: int | None
+    contract_id: int | None
+    invoice_id: int | None
 
 
 class GoodsDeliveryNoteChangeStatusSchema(BaseModel):
@@ -36,8 +43,15 @@ class GoodsDeliveryNoteListSchema(BaseModel):
 class GoodsDeliveryNoteResponseSchema(BaseModel):
     id: int
     status: GoodsDeliveryNoteStatus
-    # items: List[DocumentItem] | None = None
+    organization_id: int | None
+    counterparty_id: int | None
+    operation_type_id: int | None
+    warehouse_id: int | None
+    contract_id: int | None
+    invoice_id: int | None
+    amount: float | None
     created_at: datetime
     updated_at: datetime
+    items: List[DocumentItemResponseSchema] | None = None
 
     model_config = ConfigDict(from_attributes=True)

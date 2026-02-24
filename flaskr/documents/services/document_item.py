@@ -32,8 +32,8 @@ class DocumentItemService(BaseService[DocumentItem]):
             document_item.amount = document_item.quantity * product.selling_price
         if document_item.service_id:
             service = db.session.get(Service, document_item.service_id)
-            document_item.price_per_unit = service.price
-            document_item.amount = document_item.quantity * service.price
+            document_item.price_per_unit = service.selling_price
+            document_item.amount = document_item.quantity * service.selling_price
 
 
     @classmethod

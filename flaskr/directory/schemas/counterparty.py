@@ -13,6 +13,7 @@ class CounterpartyCreateSchema(BaseModel):
     name: str
     address: str | None = None
     organization_id: int
+    additional_data: str
 
 
 class CounterpartyUpdateSchema(BaseModel):
@@ -28,7 +29,8 @@ class CounterpartyListSchema(BaseModel):
 class CounterpartyResponseSchema(BaseModel):
     id: int
     name: str
-    address: str
+    address: str | None = None
+    additional_data: str
     created_at: datetime
     updated_at: datetime
 
