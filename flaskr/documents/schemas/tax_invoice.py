@@ -27,6 +27,7 @@ class TaxInvoiceUpdateSchema(BaseModel):
     warehouse_id: int | None = None
     contract_id: int | None = None
     comment: str | None = None
+    document_date: datetime | None = None
 
 
 class TaxInvoiceChangeStatusSchema(BaseModel):

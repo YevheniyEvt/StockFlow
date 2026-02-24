@@ -30,7 +30,7 @@ class GoodsDeliveryNoteUpdateSchema(BaseModel):
     contract_id: int | None = None
     invoice_id: int | None = None
     comment: str | None = None
-
+    document_date: datetime | None = None
 
 class GoodsDeliveryNoteChangeStatusSchema(BaseModel):
     status: GoodsDeliveryNoteStatus
