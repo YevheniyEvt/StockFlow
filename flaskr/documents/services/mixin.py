@@ -10,11 +10,11 @@ class DocumentsAllMixin:
         stmt = select(cls.model)
         if data.counterparty_id:
             stmt = stmt.where(cls.model.counterparty_id == data.counterparty_id)
-        else:
+            return db.session.scalars(stmt).all()
+        if data.organization_id:
             stmt = stmt.where(cls.model.organization_id == data.organization_id)
-
-        notes = db.session.scalars(stmt).all()
-        return notes
+            return db.session.scalars(stmt).all()
+        return db.session.scalars(stmt).all()
 
 
 class CreateDocumentItemMixin:

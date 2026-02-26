@@ -26,9 +26,10 @@ class ItemsMixin:
     """
 
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    purchase_price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
-    selling_price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
+    purchase_price: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
+    selling_price: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    discount: Mapped[Decimal] = mapped_column(Numeric(2,0), default=0)
 
     @declared_attr.directive
     def __table_args__(cls):
@@ -43,5 +44,8 @@ class ItemsMixin:
 class ServicesAllMixin:
     @classmethod
     def all(cls, data):
-        organization_id = data.organization_id
-        return db.session.scalars(select(cls.model).where(cls.model.organization_id == organization_id)).all()
+        if data and hasattr(data, 'organization_id') and data.organization_id:
+            return db.session.scalars(
+                select(cls.model).where(cls.model.organization_id == data.organization_id)
+            ).all()
+        return db.session.scalars(select(cls.model)).all()

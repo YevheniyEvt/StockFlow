@@ -6,18 +6,20 @@ import ProductsTable from './ProductsTable.jsx';
 import ServicesTable from "./ServicesTable.jsx";
 import BankAccounts from "./BankAccounts.jsx";
 
-    const products = [
-        { id: 1, name: "Брус квадратний 40*40", quantity: 10, unit: "шт.", factor: 1, price: 120.00, amount: 1200.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 200.00, total: 3600.00, account: 203 },
-        { id: 2, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
-        { id: 3, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
-    ];
+    // const products = [
+    //     { id: 1, name: "Брус квадратний 40*40", quantity: 10, unit: "шт.", factor: 1, price: 120.00, amount: 1200.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 200.00, total: 3600.00, account: 203 },
+    //     { id: 2, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
+    //     { id: 3, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, DiscountAmount: 1200, discount: 0, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
+    // ];
+    //
+    // const services = [
+    //     { id: 1, name: "Брус квадратний 40*40", quantity: 10, unit: "шт.", factor: 1, price: 120.00, amount: 1200.00, vatRate: "20%", vatAmount: 200.00, total: 3600.00, account: 203 },
+    //     { id: 2, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
+    // ];
 
-    const services = [
-        { id: 1, name: "Брус квадратний 40*40", quantity: 10, unit: "шт.", factor: 1, price: 120.00, amount: 1200.00, vatRate: "20%", vatAmount: 200.00, total: 3600.00, account: 203 },
-        { id: 2, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
-    ];
-
-function DocumentDetailTab(props) {
+function DocumentDetailTab({document, canEdit}) {
+    const products = document.items.filter(item => item.product);
+    const services = document.items.filter(item => item.service);
     const [key, setKey] = useState('products');
     const productTitle = key==="products" ?`Товари(${products.length})`: "Товари"
     const servicesTitle = key==="services" ?`Послуги(${services.length})`: "Послуги"
@@ -32,12 +34,12 @@ function DocumentDetailTab(props) {
         >
           <Tab eventKey="products" title={productTitle}>
             <div className="p-3">
-                <ProductsTable canEdit={props.canEdit} products={products}/>
+                <ProductsTable canEdit={canEdit} products={products}/>
             </div>
           </Tab>
           <Tab eventKey="services" title={servicesTitle}>
             <div className="p-3">
-                <ServicesTable canEdit={props.canEdit} services={services}/>
+                <ServicesTable canEdit={canEdit} services={services}/>
             </div>
           </Tab>
           <Tab eventKey="bank" title="Реквізити">

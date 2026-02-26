@@ -1,5 +1,6 @@
 import Table from 'react-bootstrap/Table';
 
+
 function OrderListTable({ elements, onRowDoubleClick }) {
     return (
         <div className="table-container m-3">
@@ -14,6 +15,7 @@ function OrderListTable({ elements, onRowDoubleClick }) {
                   <th>Контрагент</th>
                   <th>Склад</th>
                   <th>Організація</th>
+                  <th>Контракт</th>
                 </tr>
               </thead>
               <tbody className="text-nowrap">
@@ -24,14 +26,15 @@ function OrderListTable({ elements, onRowDoubleClick }) {
                         onDoubleClick={() => onRowDoubleClick(element)}
                         style={{ cursor: 'pointer' }}
                     >
-                        <td>{element.date}</td>
-                        <td><span className="fw-bold">{element.number}</span></td>
-                        <td>{element.typeOperation}</td>
-                        <td className="text-end fw-bold">{element.amount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })}</td>
-                        <td><small className="text-muted">{element.curency}</small></td>
-                        <td>{element.countparty}</td>
-                        <td>{element.warhouse}</td>
-                        <td>{element.organization}</td>
+                        <td>{new Date(element.document_date).toLocaleString('uk-UA')}</td>
+                        <td><span className="fw-bold">ДО0000{element.id}</span></td>
+                        <td>{element.operation_type_id}</td>
+                        <td>{element.amount.toFixed(2)}</td>
+                        <td><small className="text-muted">-----</small></td>
+                        <td>{element.contract_id}</td>
+                        <td>{element.warehouse_id}</td>
+                        <td>{element.organization_id}</td>
+                        <td>{element.contract_id}</td>
                     </tr>
                 ))}
               </tbody>

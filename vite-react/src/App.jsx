@@ -3,6 +3,7 @@ import DocumentList from "./list/DocumentList.jsx";
 import DocumentDetail from "./detail/DocumentDetail.jsx";
 import Home from './Home.jsx';
 import Reports from "./reports/Reports.jsx";
+import axios from "axios";
 
 function App() {
   const [view, setView] = useState('home');
@@ -38,24 +39,71 @@ function App() {
       setView('detail');
     }
   };
-
-  const handleToCreateOn = (document) => {
-    let createdDocument;
-    switch (documentType) {
-        case 'order':
-            createdDocument = 'invoice';
-            break;
-        case 'invoice':
-            createdDocument = 'goodsDelivery';
-            break;
-        case 'goodsDelivery':
-            createdDocument = 'taxInvoice';
-            break;
-        default:
-            createdDocument = documentType;
+  const createNewInvoice = async (document) => {
+    try {
+      const response = await axios.post("/api/documents/invoices/create", {
+        order_id: document.id,
+        organization_id: document.organization_id,
+        counterparty_id: document.counterparty_id,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    setDocumentType(createdDocument)
-    setSelectedDocument(document);
+  };
+
+    const createNewGoodsDeliveryNote = async (document) => {
+        try {
+          const response = await axios.post("/api/documents/goods_delivery_notes/create", {
+            invoice_id: document.id,
+            organization_id: document.organization_id,
+            counterparty_id: document.counterparty_id,
+          });
+          return response.data;
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+  };
+
+    const createNewTaxInvoice = async (document) => {
+        try {
+          const response = await axios.post("/api/documents/tax_invoices/create", {
+            goods_delivery_note_id: document.id,
+            organization_id: document.organization_id,
+            counterparty_id: document.counterparty_id,
+          });
+          return response.data;
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+  };
+
+  const handleToCreateOn = async (document) => {
+    let createdDocumentType;
+    let newSelectedDocument = document;
+
+    switch (documentType) {
+      case 'order':
+        createdDocumentType = 'invoice';
+        newSelectedDocument = await createNewInvoice(document);
+        break;
+      case 'invoice':
+        createdDocumentType = 'goodsDelivery';
+        newSelectedDocument = await createNewGoodsDeliveryNote(document);
+        break;
+      case 'goodsDelivery':
+        createdDocumentType = 'taxInvoice';
+        newSelectedDocument = await createNewTaxInvoice(document);
+        break;
+      default:
+        createdDocumentType = documentType;
+    }
+
+    setDocumentType(createdDocumentType);
+    setSelectedDocument(newSelectedDocument);
     setView('detail');
   };
   return (

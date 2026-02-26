@@ -1,7 +1,8 @@
 from flaskr.directory.schemas import (
     OrganizationCreateSchema,
     OrganizationUpdateSchema,
-    OrganizationResponseSchema
+    OrganizationResponseSchema,
+    OrganizationListSchema,
 )
 from flaskr.directory.services import OrganizationService
 from flaskr.core.views import ListAPI, DetailAPI, CreateAPI, UpdateAPI, DeleteAPI
@@ -17,7 +18,7 @@ __all__ = (
 
 class OrganizationListAPI(ListAPI):
     service = OrganizationService
-    request_schema = None
+    request_schema = OrganizationListSchema
     response_schema = OrganizationResponseSchema
 
 

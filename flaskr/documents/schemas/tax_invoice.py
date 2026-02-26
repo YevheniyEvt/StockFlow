@@ -18,7 +18,7 @@ __all__ = (
 
 class TaxInvoiceCreateSchema(BaseModel):
     organization_id: int
-    counterparty_id: int
+    counterparty_id: int | None = None
     goods_delivery_note_id: int
 
 
@@ -35,12 +35,14 @@ class TaxInvoiceChangeStatusSchema(BaseModel):
 
 
 class TaxInvoiceListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
     counterparty_id: int | None = None
 
 
 class TaxInvoiceResponseSchema(BaseModel):
     id: int
+    organization_id: int
+    counterparty_id: int | None = None
     status: TaxInvoiceStatus
     operation_type_id: int | None
     warehouse_id: int | None
@@ -50,5 +52,6 @@ class TaxInvoiceResponseSchema(BaseModel):
     comment: str | None
     created_at: datetime
     updated_at: datetime
+    document_date: datetime
 
     model_config = ConfigDict(from_attributes=True)

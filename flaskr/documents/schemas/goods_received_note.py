@@ -19,7 +19,7 @@ __all__ = (
 
 class GoodsReceivedNoteCreateSchema(BaseModel):
     organization_id: int
-    counterparty_id: int
+    counterparty_id: int | None = None
 
 
 class GoodsReceivedNoteUpdateSchema(BaseModel):
@@ -37,7 +37,7 @@ class GoodsReceivedNoteChangeStatusSchema(BaseModel):
 
 
 class GoodsReceivedNoteListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
     counterparty_id: int | None = None
 
 
@@ -52,7 +52,7 @@ class GoodsReceivedNoteResponseSchema(BaseModel):
     contract_id: int | None
     warehouse_id: int | None
     organization_id: int
-    counterparty_id: int
+    counterparty_id: int | None
     operation_type_id: int | None
     comment: str | None
     items: List[DocumentItemResponseSchema] | None = None

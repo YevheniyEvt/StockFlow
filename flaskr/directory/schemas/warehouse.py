@@ -23,7 +23,7 @@ class WarehouseUpdateSchema(BaseModel):
 
 
 class WarehouseListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
 
 
 class WarehouseResponseSchema(BaseModel):

@@ -4,9 +4,12 @@ services:
   backend:
     build: .
     command: >
-      sh -c "python3 -m flaskr.scripts.seed_data && gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app"
+      sh -c "python3 -m flaskr.scripts.seed_data && gunicorn --reload -w 4 -b 0.0.0.0:8000 wsgi:app"
     container_name: flask_backend
     restart: always
+    volumes:
+      - .:/app
+      - /app/.venv
     expose:
       - "8000"
     env_file: .env
@@ -24,9 +27,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   frontend:
-    build: ./vite-react
+    build:
+      context: ./vite-react
+      target: dev
     container_name: react_frontend
+    command: npm run dev -- --host 0.0.0.0
     restart: always
+    volumes:
+      - ./vite-react:/app
+      - /app/node_modules
+    expose:
+      - "5173"
 
   nginx:
     image: nginx:alpine

@@ -17,7 +17,7 @@ __all__ = (
 
 class OrderCreateSchema(BaseModel):
     organization_id: int
-    counterparty_id: int
+    counterparty_id: int | None = None
 
 
 class OrderUpdateSchema(BaseModel):
@@ -34,7 +34,7 @@ class OrderChangeStatusSchema(BaseModel):
 
 
 class OrderListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
     counterparty_id: int | None = None
 
 
@@ -47,8 +47,11 @@ class OrderResponseSchema(BaseModel):
     operation_type_id: int | None
     warehouse_id: int | None
     contract_id: int | None
+    organization_id: int
+    counterparty_id: int | None = None
     amount: float | None
     comment: str | None
+    document_date: datetime
     created_at: datetime
     updated_at: datetime
 

@@ -39,6 +39,12 @@ class ServiceListSchema(BaseModel):
 
 class ServiceResponseSchema(ServiceBaseSchema):
     id: int
+    name: str
+    multiplicity: float
+    selling_price: float
+    organization_id: int | None = None
+    counterparty_id: int | None = None
+    units_of_measurement_id: int | None = None
     created_at: datetime
     updated_at: datetime
 

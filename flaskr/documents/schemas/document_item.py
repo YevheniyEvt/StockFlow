@@ -37,9 +37,11 @@ class DocumentItemListSchema(BaseModel):
 
 class DocumentItemResponseSchema(BaseModel):
     document_id: int
+    selling_price: float
     product: ProductResponseSchema | None = None
-    quantity: Decimal
-    amount: Decimal
+    quantity: float
+    amount: float
+    discount: float
     service: ServiceResponseSchema | None = None
 
     model_config = ConfigDict(from_attributes=True)

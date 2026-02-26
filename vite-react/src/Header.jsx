@@ -1,10 +1,10 @@
 import CloseButton from 'react-bootstrap/CloseButton';
 
 function Header({ name, document, onBack, onForward, onClose }) {
-    let date = document?.date ?? '';
-    let displayDate = date ? `від ${date}` : '';
-    let number = document?.number ?? '';
-    let displayNumber = number ? `#${number}` : '';
+    let date = document ? document.document_date : '';
+    let displayDate = date ? `від ${new Date(date).toLocaleDateString('uk-UA')}` : '';
+    let number = document ? document.id : '';
+    let displayNumber = number ? `№${number}` : '';
 
     return (
         <div className="app-header d-flex justify-content-between align-items-center px-3 border-bottom">

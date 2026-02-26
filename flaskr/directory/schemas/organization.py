@@ -5,6 +5,7 @@ __all__ = (
     'OrganizationCreateSchema',
     'OrganizationUpdateSchema',
     'OrganizationResponseSchema',
+    'OrganizationListSchema',
 )
 
 
@@ -17,6 +18,10 @@ class OrganizationCreateSchema(BaseModel):
 class OrganizationUpdateSchema(BaseModel):
     name: str | None = None
     address: str | None = None
+
+
+class OrganizationListSchema(BaseModel):
+    pass
 
 
 class OrganizationResponseSchema(BaseModel):

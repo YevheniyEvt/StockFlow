@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Table, Row, Col, Card } from 'react-bootstrap';
+import axios from 'axios';
 
 function ProductStockReport() {
     const [date, setDate] = useState('');
@@ -11,7 +12,6 @@ function ProductStockReport() {
             alert("Будь ласка, виберіть дату");
             return;
         }
-        setLoading(true);
         try {
             // Заглушка для демонстрації згідно зі схемою RemainingProductsReportResponseSchema
             const mockData = {

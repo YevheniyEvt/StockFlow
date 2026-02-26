@@ -6,8 +6,6 @@ import Button from "react-bootstrap/Button";
 function ProductsTable(props){
     const [selectedId, setSelectedId] = useState(null);
 
-
-
     const handleRowClick = (id) => {
         setSelectedId(id);
     };
@@ -62,37 +60,31 @@ function ProductsTable(props){
                   <th>Од. вим.</th>
                   <th>Кратність</th>
                   <th>Ціна з ПДВ</th>
-                  <th>Сума б/знижки</th>
                   <th>Знижка</th>
+                  <th>% Знижки</th>
                   <th>Сума з ПДВ</th>
-                  <th>% ПДВ</th>
                   <th>Сума ПДВ</th>
-                  <th>Всього</th>
-                  <th>Рахунок</th>
                 </tr>
               </thead>
               <tbody className="text-nowrap">
-                {props.products.map((product, index) => (
+                {props.products.map((item, index) => (
                     <tr 
-                        key={product.id} 
-                        id={product.id}
-                        onClick={() => handleRowClick(product.id)}
-                        className={selectedId === product.id ? "table-active" : ""}
+                        key={item.id} 
+                        id={item.id}
+                        onClick={() => handleRowClick(item.id)}
+                        className={selectedId === item.id ? "table-active" : ""}
                         style={{ cursor: 'pointer' }}
                     >
                         <td>{index + 1}</td>
-                        <td>{product.name}</td>
-                        <td>{product.quantity}</td>
-                        <td>{product.unit}</td>
-                        <td>{product.factor}</td>
-                        <td>{product.price.toFixed(2)}</td>
-                        <td>{product.DiscountAmount.toFixed(2)}</td>
-                        <td>{product.discount.toFixed(2)}</td>
-                        <td>{product.amount.toFixed(2)}</td>
-                        <td>{product.vatRate}</td>
-                        <td>{product.vatAmount.toFixed(2)}</td>
-                        <td>{product.total.toFixed(2)}</td>
-                        <td>{product.account}</td>
+                        <td>{item.product.name}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.product.units_of_measurement_id}</td>
+                        <td>{item.product.multiplicity}</td>
+                        <td>{item.selling_price.toFixed(2)}</td>
+                        <td>{(item.amount * (item.discount/100)).toFixed(2)}</td>
+                        <td>{item.discount.toFixed(0)}</td>
+                        <td>{(item.amount - (item.amount * (item.discount/100))).toFixed(2)}</td>
+                        <td>{((item.amount - (item.amount * (item.discount/100)))*0.2).toFixed(2)}</td>
                     </tr>
                 ))}
               </tbody>

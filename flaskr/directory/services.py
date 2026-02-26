@@ -24,12 +24,8 @@ __all__ = (
 )
 
 
-class OrganizationService(BaseService[Organization]):
+class OrganizationService(ServicesAllMixin, BaseService[Organization]):
     model = Organization
-
-    @staticmethod
-    def all(*args) -> List[Organization]:
-        return db.session.scalars(select(Organization)).all()
 
 
 class CounterpartyService(ServicesAllMixin, BaseService[Counterparty]):

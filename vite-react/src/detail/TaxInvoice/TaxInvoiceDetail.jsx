@@ -9,7 +9,7 @@ function TaxInvoiceDetail({ document, onBack, onClose, onToCreateOn }){
         <>
             <Header name="Податкова накладна" document={order} onBack={onBack} onClose={onClose}/>
             <TaxInvoiceNavigation onBack={onBack} onToCreateOn={onToCreateOn} />
-            <DocumentDetailTab canEdit={false}/>
+            <DocumentDetailTab document={document} canEdit={false}/>
         </>
     )
 }

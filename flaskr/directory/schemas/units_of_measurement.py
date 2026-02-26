@@ -21,7 +21,7 @@ class UnitsOfMeasurementUpdateSchema(BaseModel):
 
 
 class UnitsOfMeasurementListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
 
 
 class UnitsOfMeasurementResponseSchema(BaseModel):

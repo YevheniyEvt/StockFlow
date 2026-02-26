@@ -23,7 +23,7 @@ class CounterpartyUpdateSchema(BaseModel):
 
 
 class CounterpartyListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
 
 
 class CounterpartyResponseSchema(BaseModel):

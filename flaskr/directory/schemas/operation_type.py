@@ -21,7 +21,7 @@ class OperationTypeUpdateSchema(BaseModel):
 
 
 class OperationTypeListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
 
 
 class OperationTypeResponseSchema(BaseModel):

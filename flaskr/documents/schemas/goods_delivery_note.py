@@ -18,7 +18,7 @@ __all__ = (
 
 class GoodsDeliveryNoteCreateSchema(BaseModel):
     organization_id: int
-    counterparty_id: int
+    counterparty_id: int | None = None
     invoice_id: int
 
 
@@ -37,7 +37,7 @@ class GoodsDeliveryNoteChangeStatusSchema(BaseModel):
 
 
 class GoodsDeliveryNoteListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
     counterparty_id: int | None = None
 
 
@@ -54,6 +54,7 @@ class GoodsDeliveryNoteResponseSchema(BaseModel):
     comment: str | None
     created_at: datetime
     updated_at: datetime
+    document_date: datetime
     items: List[DocumentItemResponseSchema] | None = None
 
     model_config = ConfigDict(from_attributes=True)
