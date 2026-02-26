@@ -49,7 +49,7 @@ class Document(CreatedUpdatedDateTimeMixin, db.Model):
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
-    document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType))
+    document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, native_enum=False))
 
     items: Mapped[List["DocumentItem"]] = relationship("DocumentItem", back_populates="document", cascade="all, delete-orphan")
 

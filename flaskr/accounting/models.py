@@ -22,7 +22,7 @@ class BaseMovement:
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
-    movement_type: Mapped[ProductMovementType]  = mapped_column(Enum(ProductMovementType))
+    movement_type: Mapped[ProductMovementType]  = mapped_column(Enum(ProductMovementType, native_enum=False))
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
 
@@ -60,6 +60,6 @@ class FinancialOperations(db.Model):
     bank_account_company_id: Mapped[int] = mapped_column(ForeignKey('bank_account_company.id'))
     type_of_operation_id: Mapped[int] = mapped_column(ForeignKey('operation_type.id'))
     document_id: Mapped[int] = mapped_column(ForeignKey('document.id'))
-    status: Mapped[FinancialOperationsStatus] = mapped_column(Enum(FinancialOperationsStatus))
+    status: Mapped[FinancialOperationsStatus] = mapped_column(Enum(FinancialOperationsStatus, native_enum=False))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     date: Mapped[datetime] = mapped_column(default=datetime.now)
