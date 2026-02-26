@@ -3,6 +3,8 @@ version: "3.9"
 services:
   backend:
     build: .
+    command: >
+      sh -c "python3 -m flaskr.scripts.seed_data && gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app"
     container_name: flask_backend
     restart: always
     expose:

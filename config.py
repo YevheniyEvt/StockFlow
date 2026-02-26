@@ -11,7 +11,9 @@ load_dotenv(path.join(BASE_DIR, ".env"))
 class Config:
     """Configuration from environment variables."""
 
-    SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = environ.get(
+        "DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "project.db")
+    )
     # Flask Config
     SECRET_KEY = environ.get("SECRET_KEY")
     FLASK_DEBUG = environ.get("FLASK_DEBUG")
