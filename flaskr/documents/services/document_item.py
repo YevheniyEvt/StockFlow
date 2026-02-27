@@ -50,6 +50,8 @@ class DocumentItemService(BaseService[DocumentItem]):
             product = db.session.get(Product, document_item.product_id)
             if document_item.selling_price is None:
                 document_item.selling_price = product.selling_price
+            if document_item.purchase_price is None:
+                document_item.purchase_price = product.selling_price
             document_item.amount = document_item.quantity * document_item.selling_price
         if document_item.service_id:
             service = db.session.get(Service, document_item.service_id)

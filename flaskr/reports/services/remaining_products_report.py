@@ -1,3 +1,4 @@
+from datetime import datetime, time
 from decimal import Decimal
 from typing import Any, Dict, List
 
@@ -18,7 +19,7 @@ class RemainingProductsReportService:
     @classmethod
     def create_report(cls, organization_id, data):
         report_date = data.date
-
+        report_datetime = datetime.combine(report_date, time.max)
         # Remaining quantities and costs by product based on stock lots existing up to the date
         stmt = (
             select(
@@ -38,7 +39,7 @@ class RemainingProductsReportService:
                 and_(
                     Product.organization_id == organization_id,
                     # Approximate snapshot: only lots created on or before selected date
-                    ProductStockLot.created_at <= report_date,
+                    ProductStockLot.created_at <= report_datetime,
                 )
             )
             .group_by(Product.id, Product.name)

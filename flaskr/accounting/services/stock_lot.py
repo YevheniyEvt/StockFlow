@@ -40,7 +40,7 @@ class ProductStockLotService:
         stmt = (select(ProductStockLot)
                 .where(
             ProductStockLot.product_id == item.product_id,
-            ProductStockLot.warehouse_id == item.document.warehouse_id,
+            # ProductStockLot.warehouse_id == item.document.warehouse_id,
             ProductStockLot.quantity_remaining > 0,
                 )
                 .order_by(ProductStockLot.created_at.asc())

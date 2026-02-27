@@ -15,6 +15,8 @@ from flaskr.nomenclature.schemas import ProductResponseSchema, ServiceResponseSc
 class DocumentItemCreateSchema(BaseModel):
     document_id: int
     quantity: int
+    selling_price: int | None = None
+    purchase_price: int | None = None
     product_id: int | None = None
     service_id: int | None = None
 

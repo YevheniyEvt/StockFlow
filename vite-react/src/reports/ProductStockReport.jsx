@@ -1,44 +1,62 @@
-import React, { useState } from 'react';
-import { Form, Button, Table, Row, Col, Card } from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import {Form, Button, Table, Row, Col, Card, InputGroup} from 'react-bootstrap';
 import axios from 'axios';
 
 function ProductStockReport() {
-    const [date, setDate] = useState('');
     const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [organizations, setOrganizations] = useState([]);
+    const [selectedOrganization, setSelectedOrganization] = useState(null);
 
-    const handleFetchReport = async () => {
+
+    const fetchOrganizations = async () => {
+        axios.get('/api/directory/organizations')
+              .then(response => {
+                setOrganizations(response.data);
+              })
+              .catch(error => {
+                console.error(error);
+          });
+    }
+    useEffect(() => {
+        fetchOrganizations()
+    }, []);
+
+    const [date, setDate] = useState('');
+    const fetchReport = async () => {
         if (!date) {
             alert("Будь ласка, виберіть дату");
             return;
         }
-        try {
-            // Заглушка для демонстрації згідно зі схемою RemainingProductsReportResponseSchema
-            const mockData = {
-                date: date,
-                total_quantity: 250,
-                total_cost: 75000.00,
-                items: [
-                    { product_id: 1, product_name: "Товар 1", quantity_remaining: 100, total_cost: 30000.00, average_cost: 300.00 },
-                    { product_id: 2, product_name: "Товар 2", quantity_remaining: 150, total_cost: 45000.00, average_cost: 300.00 }
-                ]
-            };
-            setReportData(mockData);
-        } catch (error) {
-            console.error("Помилка при завантаженні звіту:", error);
-        } finally {
-            setLoading(false);
+        if (!selectedOrganization) {
+            alert("Будь ласка, виберіть оргарізацію");
+            return;
         }
-    };
+        setLoading(true);
+        axios.get(`/api/reports/remaining-products-report/${selectedOrganization?.id}`,{
+            params: { date: date }
+            })
+              .then(response => {
+                  console.log(response.data)
+                setReportData(response.data);
+              })
+              .catch(error => {
+                console.error(error);
+          });
+        setLoading(false);
+    }
+    useEffect(() => {
+        fetchOrganizations()
+    }, []);
 
     return (
         <Card className="shadow-sm">
             <Card.Header className="bg-white py-3">
-                <Form>
+                <Form className="document-form">
                     <Row className="align-items-end">
-                        <Col md={6}>
+                        <Col md={3}>
                             <Form.Group controlId="reportDate">
-                                <Form.Label>Дата залишків</Form.Label>
+                                <Form.Label className="small fw-bold text-muted mb-1">Дата залишків</Form.Label>
                                 <Form.Control 
                                     type="date" 
                                     value={date} 
@@ -46,24 +64,45 @@ function ProductStockReport() {
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={6}>
-                            <Button 
-                                variant="primary" 
-                                onClick={handleFetchReport} 
+                      <Col md={6}>
+                          <Form.Group controlId="organization">
+                            <Form.Label className="small fw-bold text-muted mb-1">Організація</Form.Label>
+                            <Form.Select
+                                aria-label="Організація"
+                                size="sm"
+                                name="organization_id"
+                            >
+                                    <option onClick={() => setSelectedOrganization(null)} value="">Виберіть організацію...</option>
+                                    {organizations.map((organization) => (
+                                        <option
+                                            key={organization.id}
+                                            value={organization.id}
+                                            onClick={() => setSelectedOrganization(organization)}
+                                        >
+                                            {organization.name}
+                                        </option>
+                                    ))}
+                            </Form.Select>
+                          </Form.Group>
+                      </Col>
+                        <Col md={3}>
+                            <Button
+                                variant="primary"
+                                onClick={fetchReport}
                                 disabled={loading}
                                 className="w-100"
                             >
-                                {loading ? 'Завантаження...' : 'Сформувати звіт'}
+                                {loading ? 'Завантаження...' : 'Сформувати'}
                             </Button>
                         </Col>
-                    </Row>
+                </Row>
                 </Form>
             </Card.Header>
             <Card.Body>
                 {reportData ? (
                     <div>
                         <div className="mb-4">
-                            <h5>Залишки товарів станом на {reportData.date}</h5>
+                            <h5>Залишки товарів станом на {new Date(reportData.date).toLocaleDateString('uk-UA')}</h5>
                             <Row>
                                 <Col md={6}>
                                     <div className="p-3 bg-light rounded border text-center">

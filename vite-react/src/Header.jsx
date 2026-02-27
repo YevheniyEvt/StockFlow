@@ -46,9 +46,9 @@ function Header({ name, document, onBack, onForward, onClose }) {
                 </h5>
             </div>
             <div className="d-flex align-items-center gap-2">
-                <button className="btn btn-sm btn-outline-secondary d-none d-md-inline-block me-2">
-                    <i className="bi bi-printer me-1"></i> Друк
-                </button>
+                {/*<button className="btn btn-sm btn-outline-secondary d-none d-md-inline-block me-2">*/}
+                {/*    <i className="bi bi-printer me-1"></i> Друк*/}
+                {/*</button>*/}
                 <CloseButton onClick={onClose} className="ms-2" />
             </div>
         </div>
