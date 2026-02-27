@@ -12,7 +12,7 @@ instance/
 *.db
 README.md
 Dockerfile
-docker-compose.yml
+docker-compose-dev.yml
 nginx/
 node_modules/
 vite-react/
