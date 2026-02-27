@@ -3,6 +3,7 @@ from sqlalchemy import select
 from flaskr import db
 from flaskr.accounting.accounting_enum import ProductMovementType
 from flaskr.accounting.models import ProductStockLot, ServiceStockLot, ProductMovement
+from flaskr.core.mixins import BusinessError
 
 
 __all__ = (
@@ -71,7 +72,7 @@ class ProductStockLotService:
             db.session.add(movement)
 
         if qty_to_sell > 0:
-            raise ValueError(f"{item.product.name} has not enough quantity in stock")
+            raise BusinessError(f"Не достатня кількість товару на складі: {item.product.name}. Операція відмінена")
 
 
 class ServiceStockLotService:

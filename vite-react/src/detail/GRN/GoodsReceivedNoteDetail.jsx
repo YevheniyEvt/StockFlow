@@ -28,7 +28,7 @@ function GoodsReceivedNoteDetail({ document, onBack, onClose, onToCreateOn, coun
                 operationTypes={operationTypes}
                 onUpdate={handleDocumentUpdate}
             />
-            <DocumentDetailTab document={currentDocument} canEdit={true} />
+            <DocumentDetailTab document={currentDocument} canEdit={true} onUpdate={handleDocumentUpdate} documentType="goods_received_note" />
         </>
     )
 }

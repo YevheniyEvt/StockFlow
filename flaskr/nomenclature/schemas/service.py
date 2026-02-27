@@ -35,7 +35,7 @@ class ServiceUpdateSchema(BaseModel):
 
 
 class ServiceListSchema(BaseModel):
-    organization_id: int
+    organization_id: int | None = None
 
 
 class ServiceResponseSchema(ServiceBaseSchema):

@@ -27,10 +27,10 @@ function OrderListTable({ elements, onRowDoubleClick }) {
                         style={{ cursor: 'pointer' }}
                     >
                         <td>{new Date(element.document_date).toLocaleString('uk-UA')}</td>
-                        <td><span className="fw-bold">ДО0000{element.id}</span></td>
+                        <td><span className="fw-bold">{element.id}</span></td>
                         <td>{element.operation_type?.name}</td>
                         <td>{element.amount.toFixed(2)}</td>
-                        <td><small className="text-muted">-----</small></td>
+                        <td>{element.counterparty?.bank_accounts?.[0]?.currency?.name || <small className="text-muted">-----</small>}</td>
                         <td>{element.counterparty?.name}</td>
                         <td>{element.warehouse?.name}</td>
                         <td>{element.organization?.name}</td>

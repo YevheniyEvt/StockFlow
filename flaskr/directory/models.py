@@ -1,4 +1,6 @@
-from typing import List
+from typing import List, TYPE_CHECKING
+if TYPE_CHECKING:
+    from flaskr.bank.models import BankAccountCompany, BankAccountCounterparty
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
 from sqlalchemy import String, ForeignKey
@@ -22,6 +24,7 @@ class Organization(CreatedUpdatedDateTimeMixin, db.Model):
     name: Mapped[str] = mapped_column(String(50))
     address: Mapped[str | None] = mapped_column(String(50))
     additional_data: Mapped[str] = mapped_column(String(50))
+    bank_accounts: Mapped[List["BankAccountCompany"]] = relationship(back_populates="organization")
 
 
 class BaseDirectory:
@@ -42,6 +45,7 @@ class Counterparty(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'counterparty'
 
     address: Mapped[str | None] = mapped_column(String(50))
+    bank_accounts: Mapped[List["BankAccountCounterparty"]] = relationship(back_populates="counterparty")
 
 
 class Warehouse(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):

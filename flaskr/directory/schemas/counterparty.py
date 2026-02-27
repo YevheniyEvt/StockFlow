@@ -1,5 +1,7 @@
 from datetime import datetime
+from typing import List
 from pydantic import BaseModel, ConfigDict
+from flaskr.bank.schemas import BankAccountCounterpartyResponseSchema
 
 __all__ = (
     'CounterpartyCreateSchema',
@@ -30,6 +32,7 @@ class CounterpartyResponseSchema(BaseModel):
     id: int
     name: str
     address: str | None = None
+    bank_accounts: List[BankAccountCounterpartyResponseSchema] | None = None
     additional_data: str
     created_at: datetime
     updated_at: datetime

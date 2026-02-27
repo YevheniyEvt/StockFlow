@@ -28,7 +28,7 @@ function TaxInvoiceDetail({ document, onBack, onClose, onToCreateOn, counterpart
                 operationTypes={operationTypes}
                 onUpdate={handleDocumentUpdate}
             />
-            <DocumentDetailTab document={currentDocument} canEdit={false}/>
+            <DocumentDetailTab document={currentDocument} canEdit={false} onUpdate={handleDocumentUpdate} documentType="tax_invoice" />
         </>
     )
 }

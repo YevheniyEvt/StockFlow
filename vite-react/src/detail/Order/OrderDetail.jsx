@@ -28,7 +28,7 @@ function OrderDetail({document, onBack, onClose, onToCreateOn, counterparts, org
                 operationTypes={operationTypes}
                 onUpdate={handleDocumentUpdate}
             />
-            <DocumentDetailTab document={currentDocument} canEdit={true} />
+            <DocumentDetailTab document={currentDocument} canEdit={true} onUpdate={handleDocumentUpdate} documentType="order" />
         </>
     )
 }

@@ -41,6 +41,7 @@ class BankAccountCompanyListSchema(BaseModel):
 class BankAccountCompanyResponseSchema(BaseSchema):
     id: int
     organization_id: int
+    currency: 'CurrencyResponseSchema | None' = None
     created_at: datetime
     updated_at: datetime
 
@@ -62,6 +63,7 @@ class BankAccountCounterpartyListSchema(BaseModel):
 class BankAccountCounterpartyResponseSchema(BaseSchema):
     id: int
     counterparty_id: int
+    currency: 'CurrencyResponseSchema | None' = None
     created_at: datetime
     updated_at: datetime
 

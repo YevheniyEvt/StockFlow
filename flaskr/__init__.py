@@ -16,6 +16,12 @@ def init_app():
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object('config.Config')
 
+    from flaskr.core.mixins import BusinessError
+    # handle custom error from
+    @app.errorhandler(BusinessError)
+    def handle_business_error(e):
+        return {"message": str(e)}, 400
+
     # handle error from pydantic validation
     @app.errorhandler(ValidationError)
     def handle_validation_error(e):

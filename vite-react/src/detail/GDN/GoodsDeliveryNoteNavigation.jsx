@@ -57,7 +57,14 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
             }
         } catch (error) {
             console.error("Error holding GDN:", error);
-            alert("Помилка при проведенні видаткової накладної");
+            if (error.response.data?.message) {
+                alert(error.response.data.message);
+            } else if (error.response.status === 400 && error.response.data?.errors) {
+                const firstError = error.response.data.errors[0]?.msg;
+                alert(firstError);
+            } else {
+                alert("Сталася помилка при збереженні");
+            }
         }
     };
 

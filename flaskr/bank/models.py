@@ -27,6 +27,7 @@ class BankAccountCompany(BaseBankAccount, CreatedUpdatedDateTimeMixin, db.Model)
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     currency: Mapped["Currency"] = relationship(back_populates="bank_account_company")
+    organization: Mapped["Organization"] = relationship(back_populates="bank_accounts")
 
 
 class BankAccountCounterparty(BaseBankAccount, CreatedUpdatedDateTimeMixin, db.Model):
@@ -34,6 +35,7 @@ class BankAccountCounterparty(BaseBankAccount, CreatedUpdatedDateTimeMixin, db.M
 
     counterparty_id: Mapped[int] = mapped_column(ForeignKey('counterparty.id'))
     currency: Mapped["Currency"] = relationship(back_populates="bank_account_counterparty")
+    counterparty: Mapped["Counterparty"] = relationship(back_populates="bank_accounts")
 
 
 class Currency(CreatedUpdatedDateTimeMixin, db.Model):

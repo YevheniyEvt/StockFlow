@@ -36,6 +36,7 @@ class DocumentItemListSchema(BaseModel):
 
 
 class DocumentItemResponseSchema(BaseModel):
+    id: int
     document_id: int
     selling_price: float
     product: ProductResponseSchema | None = None

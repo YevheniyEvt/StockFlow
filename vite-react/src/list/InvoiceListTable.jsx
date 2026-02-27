@@ -25,7 +25,7 @@ function InvoiceListTable({ elements, onRowDoubleClick }) {
                     onDoubleClick={() => onRowDoubleClick(element)}
                 >
                     <td>{new Date(element.document_date).toLocaleString('uk-UA')}</td>
-                    <td><span className="fw-bold">ДО0000{element.id}</span></td>
+                    <td><span className="fw-bold">{element.id}</span></td>
                     <td>{element.operation_type?.name}</td>
                     <td>{element.amount.toFixed(2)}</td>
                     <td><small className="text-muted">-----</small></td>

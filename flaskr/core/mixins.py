@@ -49,3 +49,7 @@ class ServicesAllMixin:
                 select(cls.model).where(cls.model.organization_id == data.organization_id)
             ).all()
         return db.session.scalars(select(cls.model)).all()
+
+
+class BusinessError(Exception):
+    pass

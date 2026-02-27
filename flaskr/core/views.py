@@ -59,7 +59,9 @@ class ListAPI(BaseApi, MethodView):
     _required_attributes = ('service', 'request_schema', 'response_schema')
 
     def get(self):
-        payload = request.get_json(silent=True) or {}
+        payload = request.args.to_dict()
+        if not payload:
+            payload = request.get_json(silent=True) or {}
         data = self.validate(payload)
         items = self.service.all(data)
         return self.serialize_many(items)
