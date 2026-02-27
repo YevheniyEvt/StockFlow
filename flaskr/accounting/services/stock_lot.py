@@ -61,6 +61,7 @@ class ProductStockLotService:
 
             # We create a movement for each batch for accurate cost accounting
             movement = ProductMovement(
+                organization_id=item.document.organization_id,
                 warehouse_id=item.document.warehouse_id,
                 product_id=item.product_id,
                 document_id=item.document_id,

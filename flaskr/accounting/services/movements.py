@@ -42,6 +42,7 @@ class ProductMovementService:
         """Create a purchase record for a product and add it to the stock lot."""
 
         product_movement = cls.model(
+            organization_id=item.document.organization_id,
             warehouse_id=item.document.warehouse_id,
             product_id=item.product_id,
             document_id=item.document_id,
@@ -76,6 +77,7 @@ class ServiceMovementService:
         """Create a purchase record for a service."""
 
         product_movement = cls.model(
+            organization_id=item.document.organization_id,
             warehouse_id=item.document.warehouse_id,
             service_id=item.service_id,
             document_id=item.document_id,
@@ -94,6 +96,7 @@ class ServiceMovementService:
         """Create a selling record for a service."""
 
         movement = cls.model(
+            organization_id=item.document.organization_id,
             warehouse_id=item.document.warehouse_id,
             service_id=item.service_id,
             document_id=item.document_id,

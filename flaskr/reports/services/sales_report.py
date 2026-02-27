@@ -1,3 +1,4 @@
+from datetime import datetime, time
 from decimal import Decimal
 from typing import Any, Dict, List
 
@@ -19,7 +20,8 @@ class SalesReportService:
     def create_report(cls, organization_id, data):
         start_date = data.start_date
         end_date = data.end_date
-
+        report_start_date = datetime.combine(start_date, time.max)
+        report_end_date = datetime.combine(end_date, time.max)
         stmt = (
             select(
                 Product.id.label("product_id"),
@@ -31,10 +33,10 @@ class SalesReportService:
             .join(Product, Product.id == ProductMovement.product_id)
             .where(
                 and_(
-                    Product.organization_id == organization_id,
+                    ProductMovement.organization_id == organization_id,
                     ProductMovement.movement_type == ProductMovementType.SELLING,
-                    ProductMovement.created_at >= start_date,
-                    ProductMovement.created_at <= end_date,
+                    ProductMovement.created_at >= report_start_date,
+                    ProductMovement.created_at <= report_end_date,
                 )
             )
             .group_by(Product.id, Product.name)

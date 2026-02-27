@@ -19,6 +19,7 @@ __all__ = (
 class BaseMovement:
     document_id: Mapped[int] = mapped_column(ForeignKey('document.id'))
     warehouse_id: Mapped[int] = mapped_column(ForeignKey('warehouse.id'))
+    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
     quantity: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     price: Mapped[Decimal |None] = mapped_column(Numeric(10, 2))
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2))

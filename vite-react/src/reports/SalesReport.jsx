@@ -1,40 +1,50 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Form, Button, Table, Row, Col, Card } from 'react-bootstrap';
+import axios from "axios";
 
 function SalesReport() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [organizations, setOrganizations] = useState([]);
+
+    const [selectedOrganization, setSelectedOrganization] = useState(null);
+        const fetchOrganizations = async () => {
+        axios.get('/api/directory/organizations')
+              .then(response => {
+                setOrganizations(response.data);
+              })
+              .catch(error => {
+                console.error(error);
+          });
+    }
+    useEffect(() => {
+        fetchOrganizations()
+    }, []);
 
     const handleFetchReport = async () => {
         if (!startDate || !endDate) {
             alert("Будь ласка, виберіть обидві дати");
             return;
         }
-        setLoading(true);
-        try {
-            // Тут буде запит до сервера
-            // const response = await fetch(`/api/reports/sales?start_date=${startDate}&end_date=${endDate}`);
-            // const data = await response.json();
-            
-            // Заглушка для демонстрації згідно зі схемою SalesReportResponseSchema
-            const mockData = {
-                start_date: startDate,
-                end_date: endDate,
-                total_quantity: 150,
-                total_amount: 45000.50,
-                items: [
-                    { product_id: 1, product_name: "Товар 1", quantity: 50, amount: 15000.00 },
-                    { product_id: 2, product_name: "Товар 2", quantity: 100, amount: 30000.50 }
-                ]
-            };
-            setReportData(mockData);
-        } catch (error) {
-            console.error("Помилка при завантаженні звіту:", error);
-        } finally {
-            setLoading(false);
+        if (!selectedOrganization) {
+            alert("Будь ласка, виберіть оргарізацію");
+            return;
         }
+        setLoading(true);
+        axios.get(`/api/reports/sales-report/${selectedOrganization?.id}`,{
+            params: { start_date: startDate, end_date: endDate }
+            })
+              .then(response => {
+                  console.log(response.data)
+                setReportData(response.data);
+              })
+              .catch(error => {
+                console.error(error);
+          });
+        setLoading(false);
+
     };
 
     return (
@@ -42,7 +52,7 @@ function SalesReport() {
             <Card.Header className="bg-white py-3">
                 <Form>
                     <Row className="align-items-end">
-                        <Col md={4}>
+                        <Col md={3}>
                             <Form.Group controlId="startDate">
                                 <Form.Label>Початкова дата</Form.Label>
                                 <Form.Control 
@@ -52,7 +62,7 @@ function SalesReport() {
                                 />
                             </Form.Group>
                         </Col>
-                        <Col md={4}>
+                        <Col md={3}>
                             <Form.Group controlId="endDate">
                                 <Form.Label>Кінцева дата</Form.Label>
                                 <Form.Control 
@@ -63,13 +73,34 @@ function SalesReport() {
                             </Form.Group>
                         </Col>
                         <Col md={4}>
-                            <Button 
-                                variant="primary" 
-                                onClick={handleFetchReport} 
+                          <Form.Group controlId="organization">
+                            <Form.Label className="small fw-bold text-muted mb-1">Організація</Form.Label>
+                            <Form.Select
+                                aria-label="Організація"
+                                size="sm"
+                                name="organization_id"
+                            >
+                                    <option onClick={() => setSelectedOrganization(null)} value="">Виберіть організацію...</option>
+                                    {organizations.map((organization) => (
+                                        <option
+                                            key={organization.id}
+                                            value={organization.id}
+                                            onClick={() => setSelectedOrganization(organization)}
+                                        >
+                                            {organization.name}
+                                        </option>
+                                    ))}
+                            </Form.Select>
+                          </Form.Group>
+                      </Col>
+                        <Col md={2}>
+                            <Button
+                                variant="primary"
+                                onClick={handleFetchReport}
                                 disabled={loading}
                                 className="w-100"
                             >
-                                {loading ? 'Завантаження...' : 'Сформувати звіт'}
+                                {loading ? 'Завантаження...' : 'Сформувати'}
                             </Button>
                         </Col>
                     </Row>
@@ -79,7 +110,7 @@ function SalesReport() {
                 {reportData ? (
                     <div>
                         <div className="mb-4">
-                            <h5>Результати за період з {reportData.start_date} по {reportData.end_date}</h5>
+                            <h5>Результати за період з {new Date(reportData.start_date).toLocaleDateString('uk-UA')}  по {new Date(reportData.end_date).toLocaleDateString('uk-UA')}</h5>
                             <Row>
                                 <Col md={6}>
                                     <div className="p-3 bg-light rounded">
