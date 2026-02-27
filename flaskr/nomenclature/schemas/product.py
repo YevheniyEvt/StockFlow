@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
+from flaskr.directory.schemas import UnitsOfMeasurementResponseSchema
 
 __all__ = (
     'ProductCreateSchema',
@@ -48,6 +49,7 @@ class ProductResponseSchema(ProductBaseSchema):
     organization_id: int | None = None
     counterparty_id: int | None = None
     units_of_measurement_id: int | None = None
+    units_of_measurement: UnitsOfMeasurementResponseSchema | None = None
     created_at: datetime
     updated_at: datetime
 

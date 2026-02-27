@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
 from sqlalchemy import String, ForeignKey
 
 from flaskr import db
@@ -25,9 +25,17 @@ class Organization(CreatedUpdatedDateTimeMixin, db.Model):
 
 
 class BaseDirectory:
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
-    name: Mapped[str] = mapped_column(String(50))
-    additional_data: Mapped[str] = mapped_column(String(50))
+    @declared_attr
+    def organization_id(cls) -> Mapped[int]:
+        return mapped_column(ForeignKey('organization.id'))
+
+    @declared_attr
+    def name(cls) -> Mapped[str]:
+        return mapped_column(String(50))
+
+    @declared_attr
+    def additional_data(cls) -> Mapped[str]:
+        return mapped_column(String(50))
 
 
 class Counterparty(BaseDirectory, CreatedUpdatedDateTimeMixin, db.Model):

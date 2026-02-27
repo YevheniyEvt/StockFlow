@@ -5,6 +5,13 @@ from pydantic import BaseModel, ConfigDict
 
 from flaskr.documents.models.document_enum import GoodsDeliveryNoteStatus
 from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
+from flaskr.directory.schemas import (
+    OrganizationResponseSchema,
+    CounterpartyResponseSchema,
+    WarehouseResponseSchema,
+    OperationTypeResponseSchema,
+    ContractResponseSchema
+)
 
 
 __all__ = (
@@ -45,10 +52,15 @@ class GoodsDeliveryNoteResponseSchema(BaseModel):
     id: int
     status: GoodsDeliveryNoteStatus
     organization_id: int | None
+    organization: OrganizationResponseSchema | None = None
     counterparty_id: int | None
+    counterparty: CounterpartyResponseSchema | None = None
     operation_type_id: int | None
+    operation_type: OperationTypeResponseSchema | None = None
     warehouse_id: int | None
+    warehouse: WarehouseResponseSchema | None = None
     contract_id: int | None
+    contract: ContractResponseSchema | None = None
     invoice_id: int | None
     amount: float | None
     comment: str | None

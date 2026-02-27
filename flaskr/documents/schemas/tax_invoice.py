@@ -5,6 +5,13 @@ from pydantic import BaseModel, ConfigDict
 
 from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
 from flaskr.documents.models.document_enum import TaxInvoiceStatus
+from flaskr.directory.schemas import (
+    OrganizationResponseSchema,
+    CounterpartyResponseSchema,
+    WarehouseResponseSchema,
+    OperationTypeResponseSchema,
+    ContractResponseSchema
+)
 
 
 __all__ = (
@@ -23,6 +30,8 @@ class TaxInvoiceCreateSchema(BaseModel):
 
 
 class TaxInvoiceUpdateSchema(BaseModel):
+    organization_id: int | None = None
+    counterparty_id: int | None = None
     operation_type_id: int | None = None
     warehouse_id: int | None = None
     contract_id: int | None = None
@@ -42,11 +51,16 @@ class TaxInvoiceListSchema(BaseModel):
 class TaxInvoiceResponseSchema(BaseModel):
     id: int
     organization_id: int
+    organization: OrganizationResponseSchema | None = None
     counterparty_id: int | None = None
+    counterparty: CounterpartyResponseSchema | None = None
     status: TaxInvoiceStatus
     operation_type_id: int | None
+    operation_type: OperationTypeResponseSchema | None = None
     warehouse_id: int | None
+    warehouse: WarehouseResponseSchema | None = None
     contract_id: int | None
+    contract: ContractResponseSchema | None = None
     amount: float | None
     items: List[DocumentItemResponseSchema] | None = None
     comment: str | None

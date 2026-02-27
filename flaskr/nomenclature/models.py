@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import List
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
 from sqlalchemy import Integer, ForeignKey, String, Numeric, CheckConstraint
 
 __all__ = (
@@ -21,13 +21,37 @@ class BaseProductService:
     units_of_measurement_id, article, name, and multiplicity.
     """
 
-    organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
-    counterparty_id: Mapped[int| None] = mapped_column(ForeignKey('counterparty.id'), nullable=True)
-    units_of_measurement_id: Mapped[int] = mapped_column(ForeignKey('units_of_measurement.id'))
-    article: Mapped[int] = mapped_column(Integer)
-    name: Mapped[str] = mapped_column(String(50))
-    multiplicity: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=1)
-    selling_price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+    @declared_attr
+    def organization_id(cls) -> Mapped[int]:
+        return mapped_column(ForeignKey('organization.id'))
+
+    @declared_attr
+    def counterparty_id(cls) -> Mapped[int | None]:
+        return mapped_column(ForeignKey('counterparty.id'), nullable=True)
+
+    @declared_attr
+    def units_of_measurement_id(cls) -> Mapped[int]:
+        return mapped_column(ForeignKey('units_of_measurement.id'))
+
+    @declared_attr
+    def units_of_measurement(cls) -> Mapped["UnitsOfMeasurement"]:
+        return relationship()
+
+    @declared_attr
+    def article(cls) -> Mapped[int]:
+        return mapped_column(Integer)
+
+    @declared_attr
+    def name(cls) -> Mapped[str]:
+        return mapped_column(String(50))
+
+    @declared_attr
+    def multiplicity(cls) -> Mapped[Decimal]:
+        return mapped_column(Numeric(10, 2), default=1)
+
+    @declared_attr
+    def selling_price(cls) -> Mapped[Decimal]:
+        return mapped_column(Numeric(10, 2))
 
 class Product(BaseProductService, CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'product'

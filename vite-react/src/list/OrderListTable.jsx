@@ -28,13 +28,13 @@ function OrderListTable({ elements, onRowDoubleClick }) {
                     >
                         <td>{new Date(element.document_date).toLocaleString('uk-UA')}</td>
                         <td><span className="fw-bold">ДО0000{element.id}</span></td>
-                        <td>{element.operation_type_id}</td>
+                        <td>{element.operation_type?.name}</td>
                         <td>{element.amount.toFixed(2)}</td>
                         <td><small className="text-muted">-----</small></td>
-                        <td>{element.contract_id}</td>
-                        <td>{element.warehouse_id}</td>
-                        <td>{element.organization_id}</td>
-                        <td>{element.contract_id}</td>
+                        <td>{element.counterparty?.name}</td>
+                        <td>{element.warehouse?.name}</td>
+                        <td>{element.organization?.name}</td>
+                        <td>{element.contract?.name}</td>
                     </tr>
                 ))}
               </tbody>

@@ -1,3 +1,4 @@
+from flask import request, jsonify
 from flaskr.documents.schemas import (
     InvoiceUpdateSchema,
     InvoiceResponseSchema,
@@ -49,3 +50,9 @@ class InvoiceChangeStatusAPI(UpdateAPI):
     service = InvoiceService
     request_schema = InvoiceChangeStatusSchema
     response_schema = InvoiceResponseSchema
+
+    def patch(self, id):
+        payload = request.get_json(silent=False)
+        data = self.validate(payload)
+        updated_instance = self.service.change_status(id, data.status.value)
+        return self.serialize(updated_instance)

@@ -3,7 +3,13 @@ from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
-from flaskr.directory.schemas import OperationTypeResponseSchema
+from flaskr.directory.schemas import (
+    OrganizationResponseSchema,
+    CounterpartyResponseSchema,
+    WarehouseResponseSchema,
+    OperationTypeResponseSchema,
+    ContractResponseSchema
+)
 from flaskr.documents.models.document_enum import GoodsReceivedNoteStatus
 from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
 
@@ -23,13 +29,13 @@ class GoodsReceivedNoteCreateSchema(BaseModel):
 
 
 class GoodsReceivedNoteUpdateSchema(BaseModel):
-    counterparty_id: str | None = None
+    counterparty_id: int | None = None
     organization_id: int | None = None
     warehouse_id : int | None = None
     contract_id: int | None = None
     comment: str | None = None
     document_date: datetime | None = None
-    operation_type: OperationTypeResponseSchema | None = None
+    operation_type_id: int | None = None
 
 
 class GoodsReceivedNoteChangeStatusSchema(BaseModel):
@@ -50,11 +56,15 @@ class GoodsReceivedNoteResponseSchema(BaseModel):
     created_at: datetime
     updated_at: datetime
     contract_id: int | None
+    contract: ContractResponseSchema | None = None
     warehouse_id: int | None
+    warehouse: WarehouseResponseSchema | None = None
     organization_id: int
+    organization: OrganizationResponseSchema | None = None
     counterparty_id: int | None
+    counterparty: CounterpartyResponseSchema | None = None
     operation_type_id: int | None
-    comment: str | None
+    operation_type: OperationTypeResponseSchema | None = None
     items: List[DocumentItemResponseSchema] | None = None
 
     model_config = ConfigDict(from_attributes=True)

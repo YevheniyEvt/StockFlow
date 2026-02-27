@@ -5,6 +5,13 @@ from pydantic import BaseModel, ConfigDict
 
 from flaskr.documents.models.document_enum import OrderStatus
 from flaskr.documents.schemas.document_item import DocumentItemResponseSchema
+from flaskr.directory.schemas import (
+    OrganizationResponseSchema,
+    CounterpartyResponseSchema,
+    WarehouseResponseSchema,
+    OperationTypeResponseSchema,
+    ContractResponseSchema
+)
 
 __all__ = (
     'OrderUpdateSchema',
@@ -21,7 +28,8 @@ class OrderCreateSchema(BaseModel):
 
 
 class OrderUpdateSchema(BaseModel):
-    counterparty_id: str | None = None
+    counterparty_id: int | None = None
+    organization_id: int | None = None
     operation_type_id: int | None = None
     warehouse_id: int | None = None
     contract_id: int | None = None
@@ -45,10 +53,15 @@ class OrderResponseSchema(BaseModel):
     status: OrderStatus
     items: List[DocumentItemResponseSchema] | None
     operation_type_id: int | None
+    operation_type: OperationTypeResponseSchema | None = None
     warehouse_id: int | None
+    warehouse: WarehouseResponseSchema | None = None
     contract_id: int | None
+    contract: ContractResponseSchema | None = None
     organization_id: int
+    organization: OrganizationResponseSchema | None = None
     counterparty_id: int | None = None
+    counterparty: CounterpartyResponseSchema | None = None
     amount: float | None
     comment: str | None
     document_date: datetime

@@ -1,3 +1,4 @@
+from flask import request, jsonify
 from flaskr.documents.schemas import (
     OrderUpdateSchema,
     OrderResponseSchema,
@@ -49,3 +50,9 @@ class OrderChangeStatusAPI(UpdateAPI):
     service = OrderService
     request_schema = OrderChangeStatusSchema
     response_schema = OrderResponseSchema
+
+    def patch(self, id):
+        payload = request.get_json(silent=False)
+        data = self.validate(payload)
+        updated_instance = self.service.change_status(id, data.status.value)
+        return self.serialize(updated_instance)

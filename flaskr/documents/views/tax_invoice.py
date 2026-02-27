@@ -1,3 +1,4 @@
+from flask import request, jsonify
 from flaskr.documents.schemas import (
     TaxInvoiceUpdateSchema,
     TaxInvoiceResponseSchema,
@@ -49,3 +50,9 @@ class TaxInvoiceChangeStatusAPI(UpdateAPI):
     service = TaxInvoiceService
     request_schema = TaxInvoiceChangeStatusSchema
     response_schema = TaxInvoiceResponseSchema
+
+    def patch(self, id):
+        payload = request.get_json(silent=False)
+        data = self.validate(payload)
+        updated_instance = self.service.change_status(id, data.status.value)
+        return self.serialize(updated_instance)

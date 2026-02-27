@@ -1,15 +1,24 @@
+import { useState, useEffect } from 'react';
 import GoodsReceivedNoteNavigation from './GoodsReceivedNoteNavigation.jsx';
 import DocumentDetailTab from "../DocumentDetailTab.jsx";
 import Header from "../../Header.jsx"
 
 function GoodsReceivedNoteDetail({ document, onBack, onClose, onToCreateOn, counterparts, organizations, contracts, warehouses, operationTypes }){
-    const date = new Date();
-    const order = document || {number: "ДО0000000022", date: date.toLocaleString()};
+    const [currentDocument, setCurrentDocument] = useState(document);
+
+    useEffect(() => {
+        setCurrentDocument(document);
+    }, [document]);
+
+    const handleDocumentUpdate = (updatedDocument) => {
+        setCurrentDocument(updatedDocument);
+    };
+
     return (
         <>
-            <Header name="Прибуткова накладна" document={order} onBack={onBack} onClose={onClose}/>
+            <Header name="Прибуткова накладна" document={currentDocument} onBack={onBack} onClose={onClose}/>
             <GoodsReceivedNoteNavigation
-                document={document}
+                document={currentDocument}
                 onBack={onBack}
                 onToCreateOn={onToCreateOn}
                 counterparts={counterparts}
@@ -17,8 +26,9 @@ function GoodsReceivedNoteDetail({ document, onBack, onClose, onToCreateOn, coun
                 contracts={contracts}
                 warehouses={warehouses}
                 operationTypes={operationTypes}
+                onUpdate={handleDocumentUpdate}
             />
-            <DocumentDetailTab document={document} canEdit={true} />
+            <DocumentDetailTab document={currentDocument} canEdit={true} />
         </>
     )
 }

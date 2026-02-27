@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -6,17 +8,69 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 
-function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterparts, organizations, contracts, warehouses }){
+function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterparts, organizations, contracts, warehouses, onUpdate }){
+    const [formData, setFormData] = useState({
+        document_date: new Date(document.document_date).toISOString().split('T')[0],
+        counterparty_id: document.counterparty_id || "",
+        organization_id: document.organization_id || "",
+        contract_id: document.contract_id || "",
+        warehouse_id: document.warehouse_id || "",
+        comment: document.comment || ""
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const dataToSave = {
+                ...formData,
+                counterparty_id: formData.counterparty_id === "" ? null : formData.counterparty_id,
+                organization_id: formData.organization_id === "" ? null : formData.organization_id,
+                contract_id: formData.contract_id === "" ? null : formData.contract_id,
+                warehouse_id: formData.warehouse_id === "" ? null : formData.warehouse_id,
+            };
+            const response = await axios.patch(`/api/documents/goods_delivery_notes/${document.id}/update`, dataToSave);
+            alert("Видаткову накладну збережено");
+            if (onUpdate) onUpdate(response.data);
+            console.log("Saved GDN:", response.data);
+        } catch (error) {
+            console.error("Error saving GDN:", error);
+            alert("Помилка при збереженні видаткової накладної");
+        }
+    };
+
+    const handleHeld = async (closeAfter = false) => {
+        try {
+            const response = await axios.patch(`/api/documents/goods_delivery_notes/${document.id}/update-status`, {
+                status: 'held'
+            });
+            alert("Видаткову накладну проведено");
+            if (onUpdate) onUpdate(response.data);
+            if (closeAfter && onBack) {
+                onBack();
+            }
+        } catch (error) {
+            console.error("Error holding GDN:", error);
+            alert("Помилка при проведенні видаткової накладної");
+        }
+    };
+
     return (
          <div className="detail-navigation p-3 bg-white border-bottom shadow-sm">
             <div className="d-flex flex-wrap gap-2 mb-4">
-                <Button variant="primary" size="sm" className="btn-icon">
+                <Button variant="primary" size="sm" className="btn-icon" onClick={handleSave}>
                     <i className="bi bi-save"></i> Записати
                 </Button>
-                <Button variant="success" size="sm" className="btn-icon">
+                <Button variant="success" size="sm" className="btn-icon" onClick={() => handleHeld(false)}>
                     <i className="bi bi-check-circle"></i> Провести
                 </Button>
-                <Button variant="outline-primary" size="sm" className="btn-icon" onClick={onBack}>
+                <Button variant="outline-primary" size="sm" className="btn-icon" onClick={() => handleHeld(true)}>
                     Провести та закрити
                 </Button>
                 <Dropdown as={ButtonGroup} size="sm">
@@ -40,7 +94,13 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
                   <Col md={3}>
                       <Form.Group controlId="orderDate">
                         <Form.Label className="small fw-bold text-muted mb-1">Дата</Form.Label>
-                        <Form.Control size="sm" type="date" defaultValue={new Date(document.document_date).toISOString().split('T')[0]} />
+                        <Form.Control 
+                            size="sm" 
+                            type="date" 
+                            name="document_date"
+                            value={formData.document_date} 
+                            onChange={handleChange}
+                        />
                       </Form.Group>
                   </Col>
                   <Col md={6}></Col>
@@ -48,13 +108,16 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
                   <Col md={6}>
                       <Form.Group controlId="counterparty">
                         <Form.Label className="small fw-bold text-muted mb-1">Контрагент</Form.Label>
-                        <Form.Select aria-label="Контрагент" size="sm">
-                                <option>Виберіть контрагент...</option>
+                        <Form.Select 
+                            aria-label="Контрагент" 
+                            size="sm"
+                            name="counterparty_id"
+                            value={formData.counterparty_id}
+                            onChange={handleChange}
+                        >
+                                <option value="">Виберіть контрагент...</option>
                                 {counterparts.map((counterpart) => (
-                                    <option key={counterpart.id}
-                                            value={counterpart.id}
-                                            selected={counterpart.id === document.counterparty_id}
-                                    >
+                                    <option key={counterpart.id} value={counterpart.id}>
                                         {counterpart.name}
                                     </option>
                                 ))}
@@ -64,12 +127,16 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
                   <Col md={6}>
                       <Form.Group controlId="organization">
                         <Form.Label className="small fw-bold text-muted mb-1">Організація</Form.Label>
-                        <Form.Select aria-label="Організація" size="sm">
+                        <Form.Select 
+                            aria-label="Організація" 
+                            size="sm"
+                            name="organization_id"
+                            value={formData.organization_id}
+                            onChange={handleChange}
+                        >
+                                <option value="">Виберіть організацію...</option>
                             {organizations.map((organization) => (
-                                <option key={organization.id}
-                                        value={organization.id}
-                                        selected={organization.id === document.organization_id}
-                                >
+                                <option key={organization.id} value={organization.id}>
                                     {organization.name}
                                 </option>
                             ))}
@@ -78,15 +145,18 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
                   </Col>
 
                   <Col md={6}>
-                      <Form.Group controlId="exampleForm.ControlInput1">
+                      <Form.Group controlId="contract">
                         <Form.Label className="small fw-bold text-muted mb-1">Договір:</Form.Label>
-                          <Form.Select aria-label="Договір" size="sm">
-                            <option value="">Оберіть договір...</option>
+                          <Form.Select 
+                            aria-label="Договір" 
+                            size="sm"
+                            name="contract_id"
+                            value={formData.contract_id}
+                            onChange={handleChange}
+                          >
+                            <option value="">Виберіть договір...</option>
                             {contracts.map((contract) => (
-                                <option key={contract.id}
-                                        value={contract.id}
-                                        selected={contract.id === document.contract_id}
-                                >
+                                <option key={contract.id} value={contract.id}>
                                     {contract.name}
                                 </option>
                             ))}
@@ -94,19 +164,35 @@ function GoodsDeliveryNoteNavigation({document, onBack, onToCreateOn, counterpar
                       </Form.Group>
                   </Col>
                   <Col md={6}>
-                      <Form.Group controlId="exampleForm.ControlInput1">
+                      <Form.Group controlId="warehouse">
                         <Form.Label className="small fw-bold text-muted mb-1">Склад:</Form.Label>
-                          <Form.Select aria-label="Склад" size="sm">
-                            <option value="">Оберіть склад...</option>
+                          <Form.Select 
+                            aria-label="Склад" 
+                            size="sm"
+                            name="warehouse_id"
+                            value={formData.warehouse_id}
+                            onChange={handleChange}
+                          >
+                            <option value="">Виберіть склад...</option>
                             {warehouses.map((warehouse) => (
-                                <option key={warehouse.id}
-                                        value={warehouse.id}
-                                        selected={warehouse.id === document.warehouse_id}
-                                >
+                                <option key={warehouse.id} value={warehouse.id}>
                                     {warehouse.name}
                                 </option>
                             ))}
                           </Form.Select>
+                      </Form.Group>
+                  </Col>
+                  <Col md={12}>
+                      <Form.Group controlId="comment">
+                        <Form.Label className="small fw-bold text-muted mb-1">Коментар</Form.Label>
+                        <Form.Control 
+                            size="sm" 
+                            as="textarea" 
+                            rows={2}
+                            name="comment"
+                            value={formData.comment}
+                            onChange={handleChange}
+                        />
                       </Form.Group>
                   </Col>
                 </Row>

@@ -5,6 +5,8 @@ from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship, declared_attr
 from sqlalchemy import Enum, ForeignKey, Numeric, String, DateTime, CheckConstraint
 
+from flaskr.directory.models import Organization, Counterparty, Warehouse, OperationType, Contract
+
 from flaskr import db
 from flaskr.core.mixins import CreatedUpdatedDateTimeMixin
 from flaskr.documents.models.document_enum import (
@@ -26,20 +28,50 @@ __all__ = (
 )
 
 class BaseDocument:
-    operation_type_id: Mapped[int | None] = mapped_column(ForeignKey('operation_type.id'))
-    contract_id: Mapped[int | None] = mapped_column(ForeignKey('contract.id'))
-    warehouse_id: Mapped[int | None] = mapped_column(ForeignKey('warehouse.id'))
+    @declared_attr
+    def operation_type_id(cls) -> Mapped[int | None]:
+        return mapped_column(ForeignKey('operation_type.id'))
 
-    amount: Mapped[Decimal] = mapped_column(Numeric(10,2),default=0)
-    comment: Mapped[str | None] = mapped_column(String(50))
-    document_date: Mapped[datetime | None] = mapped_column(DateTime, default=datetime.now)
+    @declared_attr
+    def operation_type(cls) -> Mapped["OperationType"]:
+        return relationship()
+
+    @declared_attr
+    def contract_id(cls) -> Mapped[int | None]:
+        return mapped_column(ForeignKey('contract.id'))
+
+    @declared_attr
+    def contract(cls) -> Mapped["Contract"]:
+        return relationship()
+
+    @declared_attr
+    def warehouse_id(cls) -> Mapped[int | None]:
+        return mapped_column(ForeignKey('warehouse.id'))
+
+    @declared_attr
+    def warehouse(cls) -> Mapped["Warehouse"]:
+        return relationship()
+
+    @declared_attr
+    def amount(cls) -> Mapped[Decimal]:
+        return mapped_column(Numeric(10, 2), default=0)
+
+    @declared_attr
+    def comment(cls) -> Mapped[str | None]:
+        return mapped_column(String(50))
+
+    @declared_attr
+    def document_date(cls) -> Mapped[datetime | None]:
+        return mapped_column(DateTime, default=datetime.now)
 
 
 class Document(CreatedUpdatedDateTimeMixin, db.Model):
     __tablename__ = 'document'
 
     organization_id: Mapped[int] = mapped_column(ForeignKey('organization.id'))
+    organization: Mapped["Organization"] = relationship()
     counterparty_id: Mapped[int | None] = mapped_column(ForeignKey('counterparty.id'))
+    counterparty: Mapped["Counterparty"] = relationship()
     document_type: Mapped[DocumentType] = mapped_column(Enum(DocumentType, native_enum=False))
 
     items: Mapped[List["DocumentItem"]] = relationship("DocumentItem", back_populates="document", cascade="all, delete-orphan")

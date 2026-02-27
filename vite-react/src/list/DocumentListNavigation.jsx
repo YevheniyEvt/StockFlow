@@ -20,30 +20,9 @@ function DocumentListNavigation({
         <div className="nav-toolbar border-bottom shadow-sm">
             <Form className="mb-3">
                 <Row className="g-3 align-items-center">
+                    {createNewObject && (
                     <Col xs={12} md={5}>
                         <InputGroup size="sm">
-                            <InputGroup.Text id="partner-check">
-                                <Form.Check type="checkbox" id="check-partner" />
-                            </InputGroup.Text>
-                            <InputGroup.Text className="bg-white border-end-0">Контрагент</InputGroup.Text>
-                            <Form.Select aria-label="Вибір контрагента" className="border-start-0">
-                                <option>Виберіть контрагент...</option>
-                                {counterparts.map((counterpart) => (
-                                    <option key={counterpart.id}
-                                            value={counterpart.id}
-                                            onClick={() => setSelectedCounterpart(counterpart)}
-                                    >
-                                        {counterpart.name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </InputGroup>
-                    </Col>
-                    <Col xs={12} md={5}>
-                        <InputGroup size="sm">
-                            <InputGroup.Text id="org-check">
-                                <Form.Check type="checkbox" id="check-org" />
-                            </InputGroup.Text>
                             <InputGroup.Text className="bg-white border-end-0">Організація</InputGroup.Text>
                             <Form.Select aria-label="Вибір організації" className="border-start-0">
                                 <option onClick={() => setSelectedOrganization(null)}>Виберіть організацію...</option>
@@ -58,6 +37,7 @@ function DocumentListNavigation({
                             </Form.Select>
                         </InputGroup>
                     </Col>
+                    )}
                 </Row>
             </Form>
             

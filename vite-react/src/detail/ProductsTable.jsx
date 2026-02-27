@@ -78,7 +78,7 @@ function ProductsTable(props){
                         <td>{index + 1}</td>
                         <td>{item.product.name}</td>
                         <td>{item.quantity}</td>
-                        <td>{item.product.units_of_measurement_id}</td>
+                        <td>{item.product.units_of_measurement?.name}</td>
                         <td>{item.product.multiplicity}</td>
                         <td>{item.selling_price.toFixed(2)}</td>
                         <td>{(item.amount * (item.discount/100)).toFixed(2)}</td>

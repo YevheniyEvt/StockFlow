@@ -18,7 +18,6 @@ class GoodsReceivedNoteStatus(enum.Enum):
 class OrderStatus(enum.Enum):
     DRAFT = "draft"
     CONFIRMED_BY_CLIENT = "confirmed_by_client"
-    CANCELED = "canceled"
 
 
 class InvoiceStatus(enum.Enum):
