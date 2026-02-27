@@ -6,10 +6,11 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import DatePicker from "react-datepicker";
 
 function InvoiceNavigation({ document, onBack, onToCreateOn, counterparts, organizations, contracts, warehouses, operationTypes, onUpdate }){
     const [formData, setFormData] = useState({
-        document_date: new Date(document.document_date).toISOString().split('T')[0],
+        document_date: new Date(document.document_date),
         counterparty_id: document.counterparty_id || "",
         organization_id: document.organization_id || "",
         contract_id: document.contract_id || "",
@@ -92,18 +93,24 @@ function InvoiceNavigation({ document, onBack, onToCreateOn, counterparts, organ
                         <Form.Control size="sm" type="text"  value={document.id} className="bg-light" disabled/>
                       </Form.Group>
                   </Col>
-                  <Col md={3}>
+                    <Col md={3}>
                       <Form.Group controlId="orderDate">
-                        <Form.Label className="small fw-bold text-muted mb-1">Дата</Form.Label>
-                        <Form.Control 
-                            size="sm" 
-                            type="date" 
-                            name="document_date"
-                            value={formData.document_date} 
-                            onChange={handleChange}
+                        <Form.Label className="small fw-bold text-muted mb-1">
+                          Дата
+                        </Form.Label>
+                        <DatePicker
+                          selected={formData.document_date}
+                          onChange={(date) =>
+                            setFormData({ ...formData, document_date: date })
+                          }
+                          dateFormat="yyyy-MM-dd"
+                          minDate={new Date()}
+                          className="form-control form-control-sm"
+                          wrapperClassName="w-100"
+                          placeholderText="Оберіть дату"
                         />
                       </Form.Group>
-                  </Col>
+                    </Col>
                   <Col md={6}>
                      <Form.Group controlId="operationType">
                         <Form.Label className="small fw-bold text-muted mb-1">Вид операції</Form.Label>
