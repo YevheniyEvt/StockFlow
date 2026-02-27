@@ -1,3 +1,4 @@
+from datetime import datetime, time
 from decimal import Decimal
 from typing import Any, Dict, List
 
@@ -19,7 +20,8 @@ class ProfitReportService:
     def create_report(cls, organization_id, data):
         start_date = data.start_date
         end_date = data.end_date
-
+        report_start_date = datetime.combine(start_date, time.min)
+        report_end_date = datetime.combine(end_date, time.max)
         # Revenue per product (selling)
         revenue_stmt = (
             select(
@@ -33,8 +35,8 @@ class ProfitReportService:
                 and_(
                     Product.organization_id == organization_id,
                     ProductMovement.movement_type == ProductMovementType.SELLING,
-                    ProductMovement.created_at >= start_date,
-                    ProductMovement.created_at <= end_date,
+                    ProductMovement.created_at >= report_start_date,
+                    ProductMovement.created_at <= report_end_date,
                 )
             )
             .group_by(Product.id, Product.name)
@@ -53,8 +55,8 @@ class ProfitReportService:
                 and_(
                     Product.organization_id == organization_id,
                     ProductMovement.movement_type == ProductMovementType.PURCHASE,
-                    ProductMovement.created_at >= start_date,
-                    ProductMovement.created_at <= end_date,
+                    ProductMovement.created_at >= report_start_date,
+                    ProductMovement.created_at <= report_end_date,
                 )
             )
             .group_by(Product.id)

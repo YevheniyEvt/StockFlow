@@ -17,7 +17,7 @@ import BankAccounts from "./BankAccounts.jsx";
     //     { id: 2, name: "Брус квадратний 50*50", quantity: 5, unit: "шт.", factor: 1, price: 150.00, amount: 750.00, vatRate: "20%", vatAmount: 150.00, total: 900.00, account: 203 },
     // ];
 
-function DocumentDetailTab({document, canEdit, onUpdate, documentType}) {
+function DocumentDetailTab({document, canEdit, onUpdate, documentType }) {
     const products = document.items.filter(item => item.product);
     const services = document.items.filter(item => item.service);
     const [key, setKey] = useState('products');

@@ -48,11 +48,12 @@ class DocumentItemService(BaseService[DocumentItem]):
     def _set_item_price_amount(cls, document_item: DocumentItem) -> None:
         if document_item.product_id:
             product = db.session.get(Product, document_item.product_id)
-            if document_item.selling_price is None:
-                document_item.selling_price = product.selling_price
-            if document_item.purchase_price is None:
-                document_item.purchase_price = product.selling_price
-            document_item.amount = document_item.quantity * document_item.selling_price
+            if document_item.selling_price is not None:
+                # document_item.selling_price = product.selling_price
+                document_item.amount = document_item.quantity * document_item.selling_price
+            if document_item.purchase_price is not None:
+                # document_item.purchase_price = product.selling_price
+                document_item.amount = document_item.quantity * document_item.purchase_price
         if document_item.service_id:
             service = db.session.get(Service, document_item.service_id)
             if document_item.selling_price is None:

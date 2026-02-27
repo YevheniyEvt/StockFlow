@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 
-function ItemModal({ show, onHide, onSave, item, documentId, type, organizationId }) {
+function ItemModal({ show, onHide, onSave, item, documentId, type, organizationId, documentType }) {
     const [formData, setFormData] = useState({
         quantity: 1,
         product_id: "",
@@ -72,7 +72,8 @@ function ItemModal({ show, onHide, onSave, item, documentId, type, organizationI
                 // Update existing item
                 const response = await axios.patch(`/api/documents/document_item/${item.id}/update`, {
                     quantity: parseFloat(formData.quantity),
-                    selling_price: parseFloat(formData.selling_price)
+                    selling_price: documentType !== 'goods_received_note' ? parseFloat(formData.selling_price) : null,
+                    purchase_price: documentType === 'goods_received_note' ? parseFloat(formData.selling_price): null
                 });
                 onSave(response.data);
             } else {
@@ -80,7 +81,8 @@ function ItemModal({ show, onHide, onSave, item, documentId, type, organizationI
                 const data = {
                     document_id: documentId,
                     quantity: parseFloat(formData.quantity),
-                    selling_price: formData.selling_price === "" ? null : parseFloat(formData.selling_price)
+                    selling_price: documentType !== 'goods_received_note' ? parseFloat(formData.selling_price) : null,
+                    purchase_price: documentType === 'goods_received_note' ? parseFloat(formData.selling_price): null
                 };
                 if (type === 'product') {
                     data.product_id = parseInt(formData.product_id);

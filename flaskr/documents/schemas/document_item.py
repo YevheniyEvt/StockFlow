@@ -40,7 +40,8 @@ class DocumentItemListSchema(BaseModel):
 class DocumentItemResponseSchema(BaseModel):
     id: int
     document_id: int
-    selling_price: float
+    selling_price: float | None = None
+    purchase_price: float | None = None
     product: ProductResponseSchema | None = None
     quantity: float
     amount: float

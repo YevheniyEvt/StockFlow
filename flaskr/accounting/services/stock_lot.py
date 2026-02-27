@@ -67,8 +67,8 @@ class ProductStockLotService:
                 document_id=item.document_id,
                 movement_type=ProductMovementType.SELLING,
                 quantity=sell_from_lot,
-                price=lot.purchase_price,
-                amount=sell_from_lot * lot.purchase_price,
+                price=item.selling_price,
+                amount=sell_from_lot * item.selling_price,
             )
             db.session.add(movement)
 

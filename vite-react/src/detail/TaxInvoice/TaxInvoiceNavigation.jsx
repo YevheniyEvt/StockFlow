@@ -66,13 +66,13 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
     return (
         <div className="detail-navigation p-3 bg-white border-bottom shadow-sm">
             <div className="d-flex flex-wrap gap-2 mb-4">
-                <Button variant="primary" size="sm" className="btn-icon" onClick={handleSave}>
+                <Button variant="primary" size="sm" className="btn-icon" onClick={handleSave} disabled={document.status === 'registered'}>
                     <i className="bi bi-save"></i> Записати
                 </Button>
-                <Button variant="success" size="sm" className="btn-icon" onClick={() => handleRegister(false)}>
+                <Button variant="success" size="sm" className="btn-icon" onClick={() => handleRegister(false)}  disabled={document.status === 'registered'}>
                     <i className="bi bi-check-circle"></i> Зареєструвати
                 </Button>
-                <Button variant="outline-primary" size="sm" className="btn-icon" onClick={() => handleRegister(true)}>
+                <Button variant="outline-primary" size="sm" className="btn-icon" onClick={() => handleRegister(true)}  disabled={document.status === 'registered'}>
                     Зареєструвати та закрити
                 </Button>
             </div>
@@ -94,6 +94,8 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="document_date"
                             value={formData.document_date} 
                             onChange={handleChange}
+                            min={new Date().toISOString().split('T')[0]}
+                            disabled={document.status === 'registered'}
                         />
                       </Form.Group>
                   </Col>
@@ -106,6 +108,7 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="operation_type_id"
                             value={formData.operation_type_id}
                             onChange={handleChange}
+                            disabled={document.status === 'registered'}
                         >
                             <option value="">Виберіть вид операції...</option>
                             {operationTypes.map((operationType) => (
@@ -126,6 +129,7 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="counterparty_id"
                             value={formData.counterparty_id}
                             onChange={handleChange}
+                            disabled={document.status === 'registered'}
                         >
                             <option value="">Виберіть контрагент...</option>
                                 {counterparts.map((counterpart) => (
@@ -145,6 +149,7 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="organization_id"
                             value={formData.organization_id}
                             onChange={handleChange}
+                            disabled={document.status === 'registered'}
                         >
                             <option value="">Виберіть організацію...</option>
                             {organizations.map((organization) => (
@@ -165,6 +170,7 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="contract_id"
                             value={formData.contract_id}
                             onChange={handleChange}
+                            disabled={document.status === 'registered'}
                           >
                             <option value="">Виберіть договір...</option>
                             {contracts.map((contract) => (
@@ -184,6 +190,7 @@ function TaxInvoiceNavigation({ document, onBack, onToCreateOn, counterparts, or
                             name="warehouse_id"
                             value={formData.warehouse_id}
                             onChange={handleChange}
+                            disabled={document.status === 'registered'}
                           >
                             <option value="">Виберіть склад...</option>
                             {warehouses.map((warehouse) => (

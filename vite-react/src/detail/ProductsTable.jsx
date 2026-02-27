@@ -117,7 +117,7 @@ function ProductsTable(props){
                         <td>{item.quantity}</td>
                         <td>{item.product?.units_of_measurement?.name}</td>
                         <td>{item.product?.multiplicity}</td>
-                        <td>{item.selling_price.toFixed(2)}</td>
+                        <td>{props.documentType !== "goods_received_note" ? item.selling_price.toFixed(2) : item.purchase_price.toFixed(2) }</td>
                         <td>{(item.amount * (item.discount/100)).toFixed(2)}</td>
                         <td>{item.discount.toFixed(0)}</td>
                         <td>{(item.amount - (item.amount * (item.discount/100))).toFixed(2)}</td>
@@ -135,6 +135,7 @@ function ProductsTable(props){
             documentId={props.documentId}
             type="product"
             organizationId={props.organizationId}
+            documentType={props.documentType}
         />
         </>
     )

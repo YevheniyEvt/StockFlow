@@ -20,7 +20,7 @@ class SalesReportService:
     def create_report(cls, organization_id, data):
         start_date = data.start_date
         end_date = data.end_date
-        report_start_date = datetime.combine(start_date, time.max)
+        report_start_date = datetime.combine(start_date, time.min)
         report_end_date = datetime.combine(end_date, time.max)
         stmt = (
             select(
